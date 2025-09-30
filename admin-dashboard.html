@@ -1,71 +1,76 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Admin Dashboard — Pokedex QR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <title>Admin — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    body { font-family: Arial, sans-serif; background: #fff8f0; padding: 20px; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background: #f0c090; }
-    button { padding: 10px 18px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    button { margin-top: 20px; padding: 10px 20px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #e69500; }
   </style>
 </head>
 <body>
+  <h2>Admin — Captures des utilisateurs</h2>
+  <table id="captures-table">
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Carte</th>
+        <th>QR</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<h2>Admin — Captures des utilisateurs</h2>
-<table id="captures-table">
-  <thead>
-    <tr>
-      <th>Utilisateur</th>
-      <th>Carte</th>
-      <th>QR</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <button id="btn-signout">Se déconnecter</button>
 
-<button id="btn-signout">Se déconnecter</button>
+  <!-- LIBRAIRIES -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
+  <script>
+    const tbody = document.querySelector('#captures-table tbody');
+    const btnSignout = document.getElementById('btn-signout');
+    const adminEmail = 'elisa.pregaldiny@gmail.com';
 
-<script>
-const tbody = document.querySelector('#captures-table tbody');
-const btnSignout = document.getElementById('btn-signout');
+    // Vérifie que l'utilisateur est connecté et est admin
+    auth.onAuthStateChanged(user => {
+      if (!user || user.email !== adminEmail) {
+        alert('Accès refusé');
+        window.location.href = 'admin-login.html';
+      } else {
+        loadCaptures();
+      }
+    });
 
-// Vérifie que l'admin est connecté
-auth.onAuthStateChanged(user => {
-  if(!user || user.email !== "tonemailadmin@example.com") {
-    window.location.href = "admin-login.html";
-  } else {
-    // Charger toutes les captures
-    db.collection('captures').orderBy('createdAt', 'desc').get()
-      .then(snapshot => {
-        snapshot.docs.forEach(doc => {
-          const data = doc.data();
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${data.userEmail}</td>
-            <td>${data.cardName}</td>
-            <td>${data.qrValue}</td>
-            <td>${data.createdAt ? data.createdAt.toDate() : ''}</td>
-          `;
-          tbody.appendChild(tr);
+    function loadCaptures() {
+      db.collection('captures').orderBy('createdAt', 'desc').get()
+        .then(snapshot => {
+          snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${data.userEmail}</td>
+              <td>${data.cardName}</td>
+              <td>${data.qrValue}</td>
+              <td>${data.createdAt ? data.createdAt.toDate() : ''}</td>
+            `;
+            tbody.appendChild(tr);
+          });
         });
-      });
-  }
-});
+    }
 
-// Déconnexion
-btnSignout.addEventListener('click', () => {
-  auth.signOut().then(() => window.location.href = "admin-login.html");
-});
-</script>
-
+    // Déconnexion
+    btnSignout.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'admin-login.html');
+    });
+  </script>
 </body>
 </html>
