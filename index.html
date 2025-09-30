@@ -9,29 +9,134 @@
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
   <style>
-    body { font-family: Arial, sans-serif; background: #fff8f0; margin: 0; padding: 0; }
-    header.hero img { width: 100%; height: auto; display: block; }
-    footer { text-align: center; padding: 20px; background: #fff3e0; }
-    footer a { color: #b87333; font-weight: bold; text-decoration: none; margin-right: 10px; }
-    footer button { padding: 8px 16px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    footer button:hover { background: #e69500; }
+    /* --- Style général --- */
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
 
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-    .auth-card { background: #fff; padding: 40px; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 6px 20px rgba(0,0,0,0.3); display: flex; gap: 30px; align-items: center; }
-    .auth-form { flex: 1; }
-    .auth-card h2 { color: #b87333; margin-bottom: 20px; }
-    .auth-card input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; }
-    .auth-card button { padding: 10px 18px; margin: 10px 5px 0 0; border: none; border-radius: 6px; background: #ffb347; color: #fff; font-weight: bold; cursor: pointer; }
-    .auth-card button:hover { background: #e69500; }
-    .auth-image img { max-width: 150px; height: auto; }
+    header.hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #fff3e0;
+    }
+
+    footer a {
+      color: #b87333;
+      font-weight: bold;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    footer button {
+      padding: 8px 16px;
+      background: #ffb347;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    footer button:hover {
+      background: #e69500;
+    }
+
+    /* --- Overlay Auth --- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .auth-card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .auth-form {
+      flex: 1;
+    }
+
+    .auth-card h2 {
+      color: #b87333;
+      margin-bottom: 20px;
+    }
+
+    .auth-card input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .auth-card button {
+      padding: 10px 18px;
+      margin: 10px 5px 0 0;
+      border: none;
+      border-radius: 6px;
+      background: #ffb347;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .auth-card button:hover {
+      background: #e69500;
+    }
+
+    .auth-image img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    /* --- Modal --- */
     .modal.hidden { display: none; }
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-    .modal-content { background: #fff; padding: 20px; border-radius: 12px; max-width: 500px; width: 90%; }
-    .modal-content button { float: right; border: none; background: transparent; font-size: 20px; cursor: pointer; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+    }
+    .modal-content button {
+      float: right;
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-
   <!-- Auth overlay -->
   <div id="auth-overlay" class="overlay">
     <div class="auth-card">
@@ -42,11 +147,10 @@
         <button id="btn-signup">S'inscrire</button>
         <button id="btn-signin">Se connecter</button>
       </div>
-      <div class="auth-image">
-        <img src="Mascotteflip.png" alt="Mascotte">
-      </div>
-    </div>
-  </div>
+     <div class="auth-image">
+  <!-- Mets ta mascotte ici -->
+  <img src="Mascotteflip.png" alt="Mascotte">
+</div>
 
   <!-- Swiper container -->
   <main>
@@ -78,17 +182,18 @@
 
   <!-- Admin link -->
   <footer>
-    <a href="admin-login.html">Admin (voir captures)</a>
+     <a href="admin-login.html">Admin</a>
   </footer>
 
   <!-- LIBRAIRIES -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 
-  <script src="firebase-config.js"></script>
-  <script src="app.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
