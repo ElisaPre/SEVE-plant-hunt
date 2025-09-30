@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Admin Login — Pokedex QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; background: #fff8f0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .login-card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+    input { display: block; width: 100%; margin: 10px 0; padding: 10px; border-radius: 6px; border: 1px solid #ccc; }
+    button { padding: 10px 18px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #e69500; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <h2>Connexion Admin</h2>
+  <input type="email" id="email" placeholder="Email admin">
+  <input type="password" id="password" placeholder="Mot de passe">
+  <button id="btn-login">Se connecter</button>
+  <div class="error" id="error-text"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+const btnLogin = document.getElementById('btn-login');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const errorText = document.getElementById('error-text');
+
+btnLogin.addEventListener('click', async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+    // Vérifie que c'est bien l'admin
+    if(user.email === "tonemailadmin@example.com") {
+      window.location.href = "admin-dashboard.html";
+    } else {
+      errorText.textContent = "Accès refusé : vous n'êtes pas admin";
+      auth.signOut();
+    }
+  } catch(err) {
+    errorText.textContent = "Erreur connexion : " + err.message;
+  }
+});
+</script>
+
+</body>
+</html>
