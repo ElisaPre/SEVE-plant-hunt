@@ -42,7 +42,7 @@ btnLogin.addEventListener('click', async () => {
     const userCredential = await auth.signInWithEmailAndPassword(email, password);
     const user = userCredential.user;
     // Vérifie que c'est bien l'admin
-    if(user.email === "tonemailadmin@example.com") {
+    if(user.email === "elisa.pregaldiny@gmail.com") {
       window.location.href = "admin-dashboard.html";
     } else {
       errorText.textContent = "Accès refusé : vous n'êtes pas admin";
