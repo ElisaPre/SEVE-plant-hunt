@@ -1,0 +1,17 @@
+[
+  {
+    "id": "card001",
+    "name": "Algus rubra",
+    "image": "assets/img/algus_rubra.jpg",
+    "description": "Algue rouge fréquente sur les rochers...",
+    "qrValue": "BOST-ALGUS-001"
+  },
+  {
+    "id": "card002",
+    "name": "Bostrychia moritziana",
+    "image": "assets/img/bostrychia.jpg",
+    "description": "Espèce cible du projet...",
+    "qrValue": "BOST-BM-002"
+  }
+  /* ... */
+]
