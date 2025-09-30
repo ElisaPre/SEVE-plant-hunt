@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Pokedex QR — Projet</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Auth overlay (s'affiche si pas connecté) -->
+  <div id="auth-overlay" class="overlay">
+    <div class="auth-card">
+      <h2>Connexion / Inscription</h2>
+      <input id="email" placeholder="email" />
+      <input id="password" placeholder="mot de passe" type="password" />
+      <button id="btn-signup">S'inscrire</button>
+      <button id="btn-signin">Se connecter</button>
+    </div>
+  </div>
+
+  <!-- Header image -->
+  <header class="hero">
+    <img src="assets/img/header.jpg" alt="Bannière" />
+  </header>
+
+  <!-- Swiper container -->
+  <main>
+    <div class="swiper-container">
+      <div class="swiper-wrapper" id="cards-wrapper">
+        <!-- Slides injectés via JS -->
+      </div>
+      <!-- pagination / navigation -->
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </main>
+
+  <!-- Card detail modal -->
+  <div id="card-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="close-modal">✕</button>
+      <img id="modal-img" />
+      <h3 id="modal-title"></h3>
+      <p id="modal-desc"></p>
+      <div id="scanner-area">
+        <div id="qr-reader" style="width:300px"></div>
+        <button id="btn-start-scan">Démarrer le scan</button>
+        <button id="btn-stop-scan" class="hidden">Arrêter</button>
+      </div>
+      <div id="capture-status"></div>
+    </div>
+  </div>
+
+  <!-- Admin link -->
+  <footer>
+    <a href="admin.html">Admin (voir captures)</a>
+    <button id="btn-signout">Se déconnecter</button>
+  </footer>
+
+  <!-- LIBRAIRIES -->
+  <!-- Firebase (utiliser le snippet depuis ta console Firebase ou CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <!-- Swiper -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <!-- html5-qrcode -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+
+  <!-- Ton config Firebase (créé par toi) -->
+  <script src="js/firebase-config.js"></script>
+  <!-- App logic -->
+  <script src="js/app.js"></script>
+</body>
+</html>
