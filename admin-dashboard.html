@@ -74,3 +74,15 @@
   </script>
 </body>
 </html>
+<!-- Dans le body de admin-dashboard.html, à l’endroit souhaité -->
+<button id="btn-back-to-user" style="padding:10px 16px; margin-top:20px; border:none; border-radius:6px; background:#ffb347; color:white; cursor:pointer;">
+  Retour à la page utilisateur
+</button>
+
+<script>
+  const btnBack = document.getElementById('btn-back-to-user');
+  btnBack.addEventListener('click', () => {
+    // Redirection vers la page d'accueil des participants
+    window.location.href = 'index.html';
+  });
+</script>
