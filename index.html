@@ -3,54 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <title>Pokedex QR — Projet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fff8f0;
       margin: 0;
       padding: 0;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      background: #fff8f0;
     }
 
-    /* --- Bannière noire fixe --- */
-    .top-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+    /* --- Bannière noire --- */
+    header {
       background: #111;
       color: #fff;
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      padding: 15px 30px;
-      z-index: 1000;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      padding: 10px 20px;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .top-banner a,
-    .top-banner button {
-      background: #444;
+    header a, header button {
       color: #fff;
+      text-decoration: none;
+      background: #ffb347;
       border: none;
       border-radius: 6px;
-      padding: 8px 18px;
-      margin-left: 10px;
-      text-decoration: none;
-      cursor: pointer;
+      padding: 8px 16px;
       font-weight: bold;
-      transition: background 0.3s;
+      cursor: pointer;
     }
 
-    .top-banner a:hover,
-    .top-banner button:hover {
-      background: #666;
+    header a:hover, header button:hover {
+      background: #e69500;
     }
 
-    /* Overlay Auth */
+    /* --- Overlay Auth --- */
     .overlay {
       position: fixed;
       inset: 0;
@@ -95,15 +89,47 @@
       background: #e69500;
     }
 
-    /* Main Content */
+    /* --- Sections visuelles --- */
+    .section {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .section-white {
+      background: #fff;
+    }
+
+    .section-amber {
+      background: #ffcc80;
+      color: #111;
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .section-amber img {
+      max-width: 400px;
+      width: 45%;
+      border-radius: 12px;
+    }
+
+    .section-amber .text {
+      width: 50%;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* --- Main Content (bienvenue) --- */
     #main-content {
       display: none;
       flex: 1;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
       text-align: center;
-      margin-top: 80px; /* espace pour bannière fixe */
     }
 
     #main-content h1 {
@@ -111,48 +137,16 @@
       font-size: 2rem;
       margin-bottom: 20px;
     }
-
-    #main-content p {
-      font-size: 1.1em;
-      color: #333;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #fff3e0;
-      margin-top: auto;
-    }
-
-    footer button {
-      padding: 8px 16px;
-      background: #ffb347;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    footer button:hover {
-      background: #e69500;
-    }
-
-    footer a {
-      color: #b87333;
-      font-weight: bold;
-      text-decoration: none;
-      margin-right: 10px;
-    }
   </style>
 </head>
 <body>
-  <!-- Bannière noire -->
-  <div class="top-banner">
+  <!-- Bannière noire avec boutons -->
+  <header>
     <a href="admin-login.html">Admin</a>
-    <button id="btn-signout">Déconnexion</button>
-  </div>
+    <button id="btn-signout">Se déconnecter</button>
+  </header>
 
-  <!-- Auth overlay -->
+  <!-- Overlay Auth -->
   <div id="auth-overlay" class="overlay">
     <div class="auth-card">
       <h2>Connexion / Inscription</h2>
@@ -163,10 +157,24 @@
     </div>
   </div>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <div id="main-content">
     <h1>Bienvenue sur Pokedex QR !</h1>
     <p>Vous êtes connecté.</p>
+
+    <!-- Section blanche -->
+    <div class="section section-white">
+      <h2>Bienvenue Sur Les Traces de la Végétation !</h2>
+    </div>
+
+    <!-- Section ambrée avec image -->
+    <div class="section section-amber">
+      <div class="text">
+        Ne t'aventure pas trop loin, la zone de recherche est juste ici !
+      </div>
+      <img src="Campus-Triolet-2023.jpg" alt="Carte du campus">
+    </div>
+
   </div>
 
   <!-- Firebase -->
