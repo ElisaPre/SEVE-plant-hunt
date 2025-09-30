@@ -39,7 +39,22 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
   }
+  
+// Bouton déconnexion pour les participants
+const btnSignout = document.getElementById('btn-signout');
 
+if (btnSignout) {
+  btnSignout.addEventListener('click', () => {
+    auth.signOut()
+      .then(() => {
+        // Redirige vers la page de login principale
+        window.location.href = 'index.html';
+      })
+      .catch(error => {
+        console.error('Erreur lors de la déconnexion :', error);
+      });
+  });
+}
   // Observer état auth
   auth.onAuthStateChanged(user => {
     currentUser = user;
