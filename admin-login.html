@@ -2,23 +2,32 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Admin — Connexion</title>
+  <title>Admin — Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; display: flex; height: 100vh; justify-content: center; align-items: center; background: #fff8f0; }
-    .login-box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 300px; }
-    input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; }
-    button { width: 100%; padding: 10px; background: #ffb347; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0c090; }
+    button { margin-top: 20px; padding: 10px 16px; border: none; background: #ffb347; color: white; border-radius: 6px; cursor: pointer; }
     button:hover { background: #e69500; }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Connexion Admin</h2>
-    <input id="admin-email" type="email" placeholder="Email admin" />
-    <input id="admin-password" type="password" placeholder="Mot de passe" />
-    <button id="btn-admin-login">Se connecter</button>
-  </div>
+  <h2>Admin — Captures des utilisateurs</h2>
+  <table id="captures-table">
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Carte</th>
+        <th>QR</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button id="btn-signout">Se déconnecter</button>
+  <button id="btn-home">Aller à l'accueil joueurs</button>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -27,25 +36,52 @@
   <script src="firebase-config.js"></script>
 
   <script>
+    const tbody = document.querySelector('#captures-table tbody');
+    const btnSignout = document.getElementById('btn-signout');
+    const btnHome = document.getElementById('btn-home');
+
     const adminEmail = "elisa.pregaldiny@gmail.com";
 
-    document.getElementById("btn-admin-login").addEventListener("click", () => {
-      const email = document.getElementById("admin-email").value;
-      const password = document.getElementById("admin-password").value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          if (user.email === adminEmail) {
-            window.location.href = "admin-dashboard.html";
-          } else {
-            alert("Accès refusé : vous n'êtes pas admin.");
-            auth.signOut();
-          }
-        })
-        .catch(err => {
-          alert("Erreur de connexion : " + err.message);
+    // Vérifie si admin est bien connecté
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // Pas connecté → login admin
+        window.location.href = "admin-login.html";
+      } else if (user.email !== adminEmail) {
+        // Connecté mais pas admin → expulsion
+        alert("Accès refusé : vous n'êtes pas admin.");
+        auth.signOut().then(() => {
+          window.location.href = "admin-login.html";
         });
+      } else {
+        // ✅ C'est bien l'admin → on charge les captures
+        db.collection('captures').orderBy('createdAt', 'desc').get()
+          .then(snapshot => {
+            snapshot.docs.forEach(doc => {
+              const data = doc.data();
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${data.userEmail || ""}</td>
+                <td>${data.cardName || ""}</td>
+                <td>${data.qrValue || ""}</td>
+                <td>${data.createdAt ? data.createdAt.toDate() : ""}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          });
+      }
+    });
+
+    // Bouton de déconnexion
+    btnSignout.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = "admin-login.html";
+      });
+    });
+
+    // Bouton retour accueil joueur
+    btnHome.addEventListener('click', () => {
+      window.location.href = "index.html";
     });
   </script>
 </body>
