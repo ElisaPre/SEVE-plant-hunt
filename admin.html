@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin — Captures</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0c090; }
+  </style>
+</head>
+<body>
+  <h2>Admin — Captures des utilisateurs</h2>
+  <table id="captures-table">
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Carte</th>
+        <th>QR</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button id="btn-signout">Se déconnecter</button>
+
+  <!-- LIBRAIRIES -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <script>
+    const tbody = document.querySelector('#captures-table tbody');
+    const btnSignout = document.getElementById('btn-signout');
+
+    // Vérifie que l'utilisateur est connecté
+    auth.onAuthStateChanged(user => {
+      if (!user || user.email !== 'tonemail@example.com') {
+        alert('Accès refusé');
+        window.location.href = 'index.html';
+      } else {
+        // Charger toutes les captures
+        db.collection('captures').orderBy('createdAt', 'desc').get()
+          .then(snapshot => {
+            snapshot.docs.forEach(doc => {
+              const data = doc.data();
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${data.userEmail}</td>
+                <td>${data.cardName}</td>
+                <td>${data.qrValue}</td>
+                <td>${data.createdAt ? data.createdAt.toDate() : ''}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          });
+      }
+    });
+
+    // Déconnexion
+    btnSignout.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'index.html');
+    });
+  </script>
+</body>
+</html>
