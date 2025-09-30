@@ -2,16 +2,36 @@
   {
     "id": "card001",
     "name": "Algus rubra",
-    "image": "algus_rubra.jpg",
-    "description": "Algue rouge fréquente sur les rochers...",
+    "image": "Algus_rubra.jpg",
+    "description": "Algue rouge fréquente sur les rochers, visible à marée basse.",
     "qrValue": "BOST-ALGUS-001"
   },
   {
     "id": "card002",
     "name": "Bostrychia moritziana",
-    "image": "bostrychia.jpg",
-    "description": "Espèce cible du projet...",
+    "image": "Bostrychia.jpg",
+    "description": "Espèce cible du projet, étudiée pour sa reproduction et son cycle de vie.",
     "qrValue": "BOST-BM-002"
+  },
+  {
+    "id": "card003",
+    "name": "Ceramium tenuicorne",
+    "image": "Ceramium.jpg",
+    "description": "Petite algue rouge filamenteuse, souvent vue en colonies sur les rochers.",
+    "qrValue": "BOST-CER-003"
+  },
+  {
+    "id": "card004",
+    "name": "Chondrus crispus",
+    "image": "Chondrus.jpg",
+    "description": "Algue rouge comestible utilisée pour l'industrie alimentaire.",
+    "qrValue": "BOST-CHON-004"
+  },
+  {
+    "id": "card005",
+    "name": "Gracilaria verrucosa",
+    "image": "Gracilaria.jpg",
+    "description": "Algue rouge cultivée pour la production d’agar.",
+    "qrValue": "BOST-GRAC-005"
   }
-  /* Ajoute les autres cartes ici de la même façon */
 ]
