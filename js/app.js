@@ -1,67 +1,54 @@
-// --- Authentification participants ---
+document.addEventListener("DOMContentLoaded", function() {
+  // Références DOM
+  const authOverlay = document.getElementById('auth-overlay');
+  const btnSignup = document.getElementById('btn-signup');
+  const btnSignin = document.getElementById('btn-signin');
+  const emailInput = document.getElementById('email');
+  const passInput = document.getElementById('password');
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("App.js chargé ✅");
-
-  // Récupère les éléments du DOM
-  const btnSignup = document.getElementById("btn-signup");
-  const btnSignin = document.getElementById("btn-signin");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const authOverlay = document.getElementById("auth-overlay");
-
-  // Vérifie si Firebase est bien chargé
-  if (typeof firebase === "undefined") {
-    console.error("❌ Firebase n'est pas défini. Vérifie firebase-config.js");
-    return;
-  }
-
+  // Initialisation Firebase Auth et Firestore
   const auth = firebase.auth();
+  const db = firebase.firestore();
+  let currentUser = null;
 
-  // --- Inscription ---
-  if (btnSignup) {
-    btnSignup.addEventListener("click", () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          console.log("✅ Inscription réussie :", userCredential.user.email);
-          if (authOverlay) authOverlay.style.display = "none"; // Cache l'overlay
-        })
-        .catch(error => {
-          console.error("❌ Erreur inscription :", error.message);
-          alert(error.message);
-        });
+  // Inscription
+  if(btnSignup) {
+    btnSignup.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      if(!email || !password) { alert("Email et mot de passe requis"); return; }
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+        alert("Inscription réussie !");
+      } catch(err) {
+        alert("Erreur inscription : " + err.message);
+      }
     });
   }
 
-  // --- Connexion ---
-  if (btnSignin) {
-    btnSignin.addEventListener("click", () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          console.log("✅ Connexion réussie :", userCredential.user.email);
-          if (authOverlay) authOverlay.style.display = "none"; // Cache l'overlay
-        })
-        .catch(error => {
-          console.error("❌ Erreur connexion :", error.message);
-          alert(error.message);
-        });
+  // Connexion
+  if(btnSignin) {
+    btnSignin.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      if(!email || !password) { alert("Email et mot de passe requis"); return; }
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch(err) {
+        alert("Erreur connexion : " + err.message);
+      }
     });
   }
 
-  // --- Vérifie si déjà connecté ---
+  // Observer état auth
   auth.onAuthStateChanged(user => {
-    if (user) {
-      console.log("🔑 Utilisateur déjà connecté :", user.email);
-      if (authOverlay) authOverlay.style.display = "none";
+    currentUser = user;
+    if(user) {
+      authOverlay.style.display = 'none';
+      // Tu peux ici initialiser l'app (charger cartes, swiper...)
+      console.log("Utilisateur connecté :", user.email);
     } else {
-      console.log("ℹ️ Aucun utilisateur connecté");
-      if (authOverlay) authOverlay.style.display = "flex";
+      authOverlay.style.display = 'flex';
     }
   });
 });
