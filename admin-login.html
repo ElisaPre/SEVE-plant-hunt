@@ -22,30 +22,29 @@
   </div>
 
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="firebase-config.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script> <!-- ta config Firebase existante -->
 
-  <script>
-    const adminEmail = "elisa.pregaldiny@gmail.com";
+<script>
+  // 👇 Définir auth pour cette page admin
+  const auth = firebase.auth();
 
-    document.getElementById('btn-login').addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+  document.getElementById('admin-login').addEventListener('click', async () => {
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then(userCred => {
-          if (userCred.user.email === adminEmail) {
-            window.location.href = "admin-dashboard.html";
-          } else {
-            document.getElementById('error').innerText = "Accès refusé : vous n'êtes pas admin.";
-            auth.signOut();
-          }
-        })
-        .catch(err => {
-          document.getElementById('error').innerText = "Erreur : " + err.message;
-        });
-    });
-  </script>
-</body>
-</html>
+    try {
+      const userCred = await auth.signInWithEmailAndPassword(email, password);
+      // Vérifie que c'est l'email admin
+      if(userCred.user.email === 'elisa.pregaldiny@gmail.com') {
+        window.location.href = 'admin-dashboard.html';
+      } else {
+        alert("Vous n'êtes pas admin !");
+        auth.signOut();
+      }
+    } catch(err) {
+      alert("Erreur : " + err.message);
+    }
+  });
+</script>
