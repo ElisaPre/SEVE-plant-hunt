@@ -1,75 +1,80 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <title>Admin — Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; background: #fff8f0; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #f0c090; }
-    button { margin-top: 20px; padding: 10px 20px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #e69500; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; }
+    h1 { color: #ff8c00; }
+    button { padding: 10px 20px; margin: 10px; border: none; border-radius: 6px; cursor: pointer; }
+    #btn-logout { background: #ff6347; color: white; }
+    #btn-home { background: #4caf50; color: white; }
+    #captures { margin-top: 20px; }
+    .capture { padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; background: white; }
   </style>
 </head>
 <body>
-  <h2>Admin — Captures des utilisateurs</h2>
-  <table id="captures-table">
-    <thead>
-      <tr>
-        <th>Utilisateur</th>
-        <th>Carte</th>
-        <th>QR</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <h1>Bienvenue dans l’espace Admin</h1>
+  <button id="btn-home">Retour participants</button>
+  <button id="btn-logout">Se déconnecter</button>
 
-  <button id="btn-signout">Se déconnecter</button>
+  <h2>Liste des captures</h2>
+  <div id="captures">Chargement...</div>
 
-  <!-- LIBRAIRIES -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
 
   <script>
-    const tbody = document.querySelector('#captures-table tbody');
-    const btnSignout = document.getElementById('btn-signout');
-    const adminEmail = 'elisa.pregaldiny@gmail.com';
+    const adminEmail = "elisa.pregaldiny@gmail.com";
 
-    // Vérifie que l'utilisateur est connecté et est admin
+    // Vérifie la connexion de l’utilisateur
     auth.onAuthStateChanged(user => {
-      if (!user || user.email !== adminEmail) {
-        alert('Accès refusé');
-        window.location.href = 'admin-login.html';
+      if (!user) {
+        window.location.href = "admin-login.html"; // pas connecté → login
+      } else if (user.email !== adminEmail) {
+        alert("Accès refusé : vous n’êtes pas admin.");
+        auth.signOut();
+        window.location.href = "index.html";
       } else {
-        loadCaptures();
+        loadCaptures(); // OK → on charge les données
       }
     });
 
+    // Récupère les données Firestore
     function loadCaptures() {
-      db.collection('captures').orderBy('createdAt', 'desc').get()
-        .then(snapshot => {
-          snapshot.docs.forEach(doc => {
-            const data = doc.data();
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td>${data.userEmail}</td>
-              <td>${data.cardName}</td>
-              <td>${data.qrValue}</td>
-              <td>${data.createdAt ? data.createdAt.toDate() : ''}</td>
-            `;
-            tbody.appendChild(tr);
-          });
+      db.collection("captures").get().then(snapshot => {
+        const container = document.getElementById("captures");
+        container.innerHTML = "";
+        if (snapshot.empty) {
+          container.innerHTML = "<p>Aucune capture enregistrée.</p>";
+          return;
+        }
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const div = document.createElement("div");
+          div.classList.add("capture");
+          div.innerHTML = `<strong>${data.participant || "Inconnu"}</strong> a scanné <em>${data.plante || "Plante inconnue"}</em>`;
+          container.appendChild(div);
         });
+      }).catch(err => {
+        document.getElementById("captures").innerHTML = "Erreur de chargement : " + err.message;
+      });
     }
 
+    // Bouton retour à la page participants
+    document.getElementById("btn-home").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
     // Déconnexion
-    btnSignout.addEventListener('click', () => {
-      auth.signOut().then(() => window.location.href = 'admin-login.html');
+    document.getElementById("btn-logout").addEventListener("click", () => {
+      auth.signOut().then(() => {
+        window.location.href = "admin-login.html";
+      });
     });
   </script>
 </body>
