@@ -1,80 +1,49 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <title>Admin — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; }
-    h1 { color: #ff8c00; }
-    button { padding: 10px 20px; margin: 10px; border: none; border-radius: 6px; cursor: pointer; }
-    #btn-logout { background: #ff6347; color: white; }
-    #btn-home { background: #4caf50; color: white; }
-    #captures { margin-top: 20px; }
-    .capture { padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; background: white; }
+    body { font-family: Arial; padding: 20px; background: #fff8f0; }
+    h2 { color: #b87333; }
+    button { padding: 8px 16px; margin: 5px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #e69500; }
   </style>
 </head>
 <body>
-  <h1>Bienvenue dans l’espace Admin</h1>
-  <button id="btn-home">Retour participants</button>
-  <button id="btn-logout">Se déconnecter</button>
+  <h2>Admin Dashboard</h2>
+  <button id="btn-signout">Se déconnecter</button>
+  <button id="btn-return-participant">Retour participant</button>
 
-  <h2>Liste des captures</h2>
-  <div id="captures">Chargement...</div>
-
-  <!-- Firebase -->
+  <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <!-- TON CONFIG -->
   <script src="js/firebase-config.js"></script>
 
   <script>
-    const adminEmail = "elisa.pregaldiny@gmail.com";
-
-    // Vérifie la connexion de l’utilisateur
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "admin-login.html"; // pas connecté → login
-      } else if (user.email !== adminEmail) {
-        alert("Accès refusé : vous n’êtes pas admin.");
-        auth.signOut();
-        window.location.href = "index.html";
-      } else {
-        loadCaptures(); // OK → on charge les données
-      }
-    });
-
-    // Récupère les données Firestore
-    function loadCaptures() {
-      db.collection("captures").get().then(snapshot => {
-        const container = document.getElementById("captures");
-        container.innerHTML = "";
-        if (snapshot.empty) {
-          container.innerHTML = "<p>Aucune capture enregistrée.</p>";
-          return;
-        }
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const div = document.createElement("div");
-          div.classList.add("capture");
-          div.innerHTML = `<strong>${data.participant || "Inconnu"}</strong> a scanné <em>${data.plante || "Plante inconnue"}</em>`;
-          container.appendChild(div);
-        });
-      }).catch(err => {
-        document.getElementById("captures").innerHTML = "Erreur de chargement : " + err.message;
-      });
-    }
-
-    // Bouton retour à la page participants
-    document.getElementById("btn-home").addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-
+    // S'assurer que auth et db sont déclarés dans firebase-config.js
     // Déconnexion
-    document.getElementById("btn-logout").addEventListener("click", () => {
-      auth.signOut().then(() => {
-        window.location.href = "admin-login.html";
-      });
+    const btnSignout = document.getElementById('btn-signout');
+    const btnReturnParticipant = document.getElementById('btn-return-participant');
+
+    btnSignout.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'admin-login.html');
+    });
+
+    btnReturnParticipant.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'index.html');
+    });
+
+    // Vérifie que l'utilisateur est bien connecté
+    auth.onAuthStateChanged(user => {
+      if (!user || user.email !== 'elisa.pregaldiny@gmail.com') {
+        alert('Accès refusé');
+        window.location.href = 'admin-login.html';
+      }
     });
   </script>
 </body>
