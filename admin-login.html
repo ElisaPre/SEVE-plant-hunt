@@ -2,24 +2,34 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <title>Admin — Login</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Captures</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background: #fff8f0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-    .auth-card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.3); width: 300px; }
-    .auth-card h2 { color: #b87333; margin-bottom: 20px; text-align: center; }
-    .auth-card input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; }
-    .auth-card button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 6px; background: #ffb347; color: #fff; font-weight: bold; cursor: pointer; }
-    .auth-card button:hover { background: #e69500; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0c090; }
+    button { padding: 8px 16px; margin-top: 10px; cursor: pointer; border-radius: 6px; border: none; background: #ffb347; color: #fff; }
+    button:hover { background: #e69500; }
   </style>
 </head>
 <body>
-  <div class="auth-card">
-    <h2>Connexion Admin</h2>
-    <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Mot de passe" />
-    <button id="btn-login">Se connecter</button>
-  </div>
+  <h2>Admin — Captures des utilisateurs</h2>
+
+  <table id="captures-table">
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Carte</th>
+        <th>QR</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button id="btn-signout">Se déconnecter</button>
+  <button id="btn-back">Retour page utilisateur</button>
 
   <!-- LIBRAIRIES -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -28,25 +38,52 @@
   <script src="firebase-config.js"></script>
 
   <script>
-    const btnLogin = document.getElementById('btn-login');
-    const adminEmail = 'elisa.pregaldiny@gmail.com';
+    const tbody = document.querySelector('#captures-table tbody');
+    const btnSignout = document.getElementById('btn-signout');
+    const btnBack = document.getElementById('btn-back');
 
-    btnLogin.addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+    const adminEmail = 'elisa.pregaldiny@gmail.com'; // ton email admin
 
-      if(email !== adminEmail){
-        alert('Email non autorisé pour l\'admin');
+    // Vérifie que l'utilisateur est connecté et admin
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert('Veuillez vous connecter');
+        window.location.href = 'admin-login.html';
+        return;
+      }
+      if (user.email !== adminEmail) {
+        alert('Accès refusé : utilisateur non autorisé');
+        auth.signOut();
+        window.location.href = 'admin-login.html';
         return;
       }
 
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        // Redirection vers le dashboard
-        window.location.href = 'admin-dashboard.html';
-      } catch(err) {
-        alert('Erreur de connexion : ' + err.message);
-      }
+      // Charger toutes les captures
+      db.collection('captures').orderBy('createdAt', 'desc').get()
+        .then(snapshot => {
+          snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${data.userEmail || ''}</td>
+              <td>${data.cardName || ''}</td>
+              <td>${data.qrValue || ''}</td>
+              <td>${data.createdAt ? data.createdAt.toDate().toLocaleString() : ''}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => console.error('Erreur récupération captures :', err));
+    });
+
+    // Déconnexion
+    btnSignout.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'admin-login.html');
+    });
+
+    // Retour vers page utilisateur
+    btnBack.addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'index.html');
     });
   </script>
 </body>
