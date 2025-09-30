@@ -15,6 +15,41 @@
       min-height: 100vh;
     }
 
+    /* --- Bannière noire fixe --- */
+    .top-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 15px 30px;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .top-banner a,
+    .top-banner button {
+      background: #444;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      margin-left: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .top-banner a:hover,
+    .top-banner button:hover {
+      background: #666;
+    }
+
     /* Overlay Auth */
     .overlay {
       position: fixed;
@@ -68,6 +103,7 @@
       align-items: center;
       flex-direction: column;
       text-align: center;
+      margin-top: 80px; /* espace pour bannière fixe */
     }
 
     #main-content h1 {
@@ -76,10 +112,16 @@
       margin-bottom: 20px;
     }
 
+    #main-content p {
+      font-size: 1.1em;
+      color: #333;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
       background: #fff3e0;
+      margin-top: auto;
     }
 
     footer button {
@@ -104,6 +146,12 @@
   </style>
 </head>
 <body>
+  <!-- Bannière noire -->
+  <div class="top-banner">
+    <a href="admin-login.html">Admin</a>
+    <button id="btn-signout">Déconnexion</button>
+  </div>
+
   <!-- Auth overlay -->
   <div id="auth-overlay" class="overlay">
     <div class="auth-card">
@@ -121,12 +169,6 @@
     <p>Vous êtes connecté.</p>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <a href="admin-login.html">Admin</a>
-    <button id="btn-signout">Se déconnecter</button>
-  </footer>
-
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -139,8 +181,6 @@
       const btnSignup = document.getElementById('btn-signup');
       const btnSignin = document.getElementById('btn-signin');
       const btnSignout = document.getElementById('btn-signout');
-
-      //const auth = firebase.auth();
 
       // Vérifier si l'utilisateur est connecté
       auth.onAuthStateChanged(user => {
