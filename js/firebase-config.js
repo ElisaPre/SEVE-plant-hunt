@@ -1,6 +1,4 @@
-// firebase-config.js
-
-// Configuration de ton projet Firebase
+// firebase-config.js (compat)
 const firebaseConfig = {
   apiKey: "AIzaSyBSHfjUjc9nTaZW2NwMC8PxeQgJNWpxVio",
   authDomain: "seve-plant-hunt.firebaseapp.com",
@@ -11,9 +9,7 @@ const firebaseConfig = {
   measurementId: "G-0383K60P1K"
 };
 
-// Initialisation Firebase
+// Initialise Firebase
 firebase.initializeApp(firebaseConfig);
-
-// Accès aux services Firebase
 const auth = firebase.auth();
 const db = firebase.firestore();
