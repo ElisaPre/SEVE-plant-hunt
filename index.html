@@ -158,11 +158,21 @@
     /* --- Carrousel --- */
     .carousel-container {
       position: relative;
-      width: 90%;        /* presque toute la largeur de l’écran */
-      max-width: 260px;  /* garde la taille sur grand écran */
-      height: 340px;
+      width: 100%; /* prend toute la largeur dispo */
+      max-width: 300px; /* limite sur petit écran */
       margin: 40px auto;
       perspective: 1000px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .carousel-btn.prev {
+      left: -50px; /* rapproche la flèche gauche */
+    }
+    
+    .carousel-btn.next {
+      right: -50px; /* rapproche la flèche droite */
     }
 
     .carousel-track {
@@ -212,13 +222,6 @@
       background: #e69500;
     }
 
-    .carousel-btn.prev {
-      left: -70px;
-    }
-
-    .carousel-btn.next {
-      right: -70px;
-    }
 
         @media (max-width: 480px) {
     .carousel-container {
