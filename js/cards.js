@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnPrev = document.querySelector(".carousel-btn.prev");
   const btnNext = document.querySelector(".carousel-btn.next");
 
-  // Cartes factices pour test
+  // Cartes test
   const cards = [
     { id: "card001", name: "Plante 1" },
     { id: "card002", name: "Plante 2" },
@@ -11,30 +11,53 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "card004", name: "Plante 4" }
   ];
 
-  // Génération des cartes
+  // Génération
   cards.forEach(card => {
     const cardEl = document.createElement("div");
     cardEl.classList.add("card");
-    cardEl.textContent = card.name; // juste le nom
+    cardEl.textContent = card.name;
     track.appendChild(cardEl);
   });
 
-  let index = 0;
-  const totalCards = cards.length;
+  // Clonage première + dernière pour effet loop
+  const firstClone = track.firstElementChild.cloneNode(true);
+  const lastClone = track.lastElementChild.cloneNode(true);
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, track.firstElementChild);
 
-  function updateCarousel() {
-    track.style.transform = `translateX(${-index * 100}%)`;
+  const allCards = document.querySelectorAll(".card");
+  let index = 1; // on commence sur la vraie 1ère carte
+  const cardWidth = allCards[0].offsetWidth;
+
+  track.style.transform = `translateX(${-cardWidth * index}px)`;
+
+  function moveToIndex() {
+    track.style.transition = "transform 0.4s ease";
+    track.style.transform = `translateX(${-cardWidth * index}px)`;
   }
 
   btnNext.addEventListener("click", () => {
-    index = (index + 1) % totalCards; // boucle infinie
-    updateCarousel();
+    if (index >= allCards.length - 1) return;
+    index++;
+    moveToIndex();
   });
 
   btnPrev.addEventListener("click", () => {
-    index = (index - 1 + totalCards) % totalCards;
-    updateCarousel();
+    if (index <= 0) return;
+    index--;
+    moveToIndex();
   });
 
-  updateCarousel();
+  track.addEventListener("transitionend", () => {
+    if (allCards[index].textContent === "Plante 1" && index === allCards.length - 1) {
+      track.style.transition = "none";
+      index = 1;
+      track.style.transform = `translateX(${-cardWidth * index}px)`;
+    }
+    if (allCards[index].textContent === "Plante 4" && index === 0) {
+      track.style.transition = "none";
+      index = allCards.length - 2;
+      track.style.transform = `translateX(${-cardWidth * index}px)`;
+    }
+  });
 });
