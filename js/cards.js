@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Liste des plantes avec pages associées
   const cards = [
-    { name: "Plante 1", page: "plantes/plante1.html" },
-    { name: "Plante 2", page: "plantes/plante2.html" },
-    { name: "Plante 3", page: "plantes/plante3.html" },
+    { name: "Plante 1", page: "plantes/chene.html" },
+    { name: "Plante 2", page: "plantes/erable.html" },
+    { name: "Plante 3", page: "plantes/pin.html" },
     { name: "Plante 4", page: "plantes/plante4.html" },
     { name: "Plante 5", page: "plantes/plante5.html" }
   ];
