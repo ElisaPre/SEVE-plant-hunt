@@ -91,12 +91,15 @@
 
     /* --- Sections visuelles --- */
     .section {
-      width: 100%;
+      width: 100vw;
+      max-width: 100%;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 60px 20px;
       text-align: center;
+      box-sizing: border-box;
     }
 
     .section-white {
@@ -106,21 +109,22 @@
     .section-amber {
       background: #ffcc80;
       color: #111;
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
     }
 
     .section-amber img {
+      width: 90%;
       max-width: 400px;
-      width: 45%;
       border-radius: 12px;
     }
 
     .section-amber .text {
-      width: 50%;
-      font-size: 1.2rem;
+      width: 90%;
+      font-size: 1.1rem;
       font-weight: bold;
+      text-align: center;
     }
 
     /* --- Main Content (bienvenue) --- */
@@ -139,71 +143,96 @@
     }
 
     /* --- Carrousel --- */
-.carousel-container {
-  position: relative;
-  width: 260px;
-  height: 340px;
-  margin: 40px auto;
-  perspective: 1000px; /* effet 3D */
-}
+    .carousel-container {
+      position: relative;
+      width: 90vw;
+      max-width: 400px;
+      height: 340px;
+      margin: 40px auto;
+      perspective: 1000px; /* effet 3D */
+    }
 
-.carousel-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.6s ease;
-}
+    .carousel-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+    }
 
-.card {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 220px;
-  height: 320px;
-  background: #ffe5b4; /* orange clair */
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #b87333;
-  transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
-}
+    .card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 220px;
+      height: 320px;
+      background: #ffe5b4; /* orange clair */
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #b87333;
+      transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
+    }
 
-/* Boutons carrousel */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #ffb347;
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
-  z-index: 50;
-}
+    /* Boutons carrousel */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ffb347;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      cursor: pointer;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      z-index: 50;
+    }
 
-.carousel-btn:hover {
-  background: #e69500;
-}
+    .carousel-btn:hover {
+      background: #e69500;
+    }
 
-.carousel-btn.prev {
-  left: -70px;
-}
+    .carousel-btn.prev {
+      left: -70px;
+    }
 
-.carousel-btn.next {
-  right: -70px;
-}
+    .carousel-btn.next {
+      right: -70px;
+    }
+
+    /* --- Responsive Mobile --- */
+    @media (max-width: 600px) {
+      .section-amber {
+        flex-direction: column;
+      }
+      .section-amber .text,
+      .section-amber img {
+        width: 95%;
+      }
+      .carousel-container {
+        width: 95vw;
+      }
+      .card {
+        width: 90%;
+      }
+      .carousel-btn.prev,
+      .carousel-btn.next {
+        left: 5px;
+        right: 5px;
+      }
+    }
   </style>
 </head>
 <body>
+
   <!-- Bannière noire avec boutons -->
   <header>
     <a href="admin-login.html">Admin</a>
@@ -238,68 +267,25 @@
       </div>
       <img src="Campus-Triolet-2023.jpg" alt="Carte du campus">
     </div>
-
   </div>
 
- <!-- Section carrousel des cartes -->
-<div class="section section-white">
-  <div class="carousel-container">
-    <button class="carousel-btn prev">&#10094;</button>
-    <div class="carousel-track" id="carousel-track">
-      <!-- Cartes générées par cards.js -->
+  <!-- Section carrousel des cartes -->
+  <div class="section section-white">
+    <div class="carousel-container">
+      <button class="carousel-btn prev">&#10094;</button>
+      <div class="carousel-track" id="carousel-track">
+        <!-- Cartes générées par cards.js -->
+      </div>
+      <button class="carousel-btn next">&#10095;</button>
     </div>
-    <button class="carousel-btn next">&#10095;</button>
   </div>
-</div>
 
-<!-- Script du carrousel -->
-<script src="js/cards.js"></script>
-
-  <!-- Firebase -->
+  <!-- Scripts -->
+  <script src="js/cards.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const overlay = document.getElementById('auth-overlay');
-      const mainContent = document.getElementById('main-content');
-      const btnSignup = document.getElementById('btn-signup');
-      const btnSignin = document.getElementById('btn-signin');
-      const btnSignout = document.getElementById('btn-signout');
-
-      // Vérifier si l'utilisateur est connecté
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          overlay.style.display = 'none';
-          mainContent.style.display = 'flex';
-        } else {
-          overlay.style.display = 'flex';
-          mainContent.style.display = 'none';
-        }
-      });
-
-      // Inscription
-      btnSignup.addEventListener('click', () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        auth.createUserWithEmailAndPassword(email, password)
-          .catch(error => alert(error.message));
-      });
-
-      // Connexion
-      btnSignin.addEventListener('click', () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        auth.signInWithEmailAndPassword(email, password)
-          .catch(error => alert(error.message));
-      });
-
-      // Déconnexion
-      btnSignout.addEventListener('click', () => {
-        auth.signOut();
-      });
-    });
-  </script>
 </body>
 </html>
