@@ -220,12 +220,11 @@
       right: -70px;
     }
 
-      /* --- Adaptation carrousel mobile --- */
-  @media (max-width: 480px) {
+      @media (max-width: 480px) {
     .carousel-container {
       width: 90vw;     
       max-width: none; 
-      height: 300px;   
+      height: auto; /* on laisse la hauteur s’adapter */
     }
   
     .carousel-btn.prev {
@@ -237,9 +236,9 @@
     }
   
     .card {
-      width: 70vw;     
-      height: auto;    
-      max-height: 300px;
+      width: 70vw;            /* largeur réduite pour mobile */
+      aspect-ratio: 220 / 320; /* conserve le ratio largeur/hauteur original */
+      max-height: 300px;      /* limite la hauteur si besoin */
     }
 }
 
