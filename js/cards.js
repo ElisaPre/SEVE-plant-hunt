@@ -3,17 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnPrev = document.querySelector(".carousel-btn.prev");
   const btnNext = document.querySelector(".carousel-btn.next");
 
-  // Cartes factices pour test
+  // Cartes factices
   const cards = [
-    { id: "card001", name: "Plante 1" },
-    { id: "card002", name: "Plante 2" },
-    { id: "card003", name: "Plante 3" },
-    { id: "card004", name: "Plante 4" },
-    { id: "card005", name: "Plante 5" },
-    { id: "card006", name: "Plante 6" }
+    { id: "card001", name: "Algus rubra" },
+    { id: "card002", name: "Bostrychia moritziana" },
+    { id: "card003", name: "Ceramium tenuicorne" },
+    { id: "card004", name: "Chondrus crispus" },
+    { id: "card005", name: "Gracilaria verrucosa" }
   ];
 
-  // Génération simple
+  // Génération des cartes
   cards.forEach(card => {
     const cardEl = document.createElement("div");
     cardEl.classList.add("card");
@@ -22,29 +21,25 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3>${card.name}</h3>
       </div>
     `;
-    cardEl.addEventListener("click", () => {
-      window.location.href = `card.html?id=${card.id}`;
-    });
     track.appendChild(cardEl);
   });
 
-  // Variables pour défilement
   let index = 0;
-  const cardWidth = 270;
-  const visibleCards = Math.floor(track.parentElement.offsetWidth / cardWidth);
+  const totalCards = cards.length;
 
-  // Boutons
-  btnPrev.addEventListener("click", () => {
-    if (index > 0) {
-      index--;
-      track.style.transform = `translateX(${-index * cardWidth}px)`;
-    }
-  });
+  function updateCarousel() {
+    track.style.transform = `translateX(${-index * 100}%)`;
+  }
 
   btnNext.addEventListener("click", () => {
-    if (index < cards.length - visibleCards) {
-      index++;
-      track.style.transform = `translateX(${-index * cardWidth}px)`;
-    }
+    index = (index + 1) % totalCards; // boucle infinie
+    updateCarousel();
   });
+
+  btnPrev.addEventListener("click", () => {
+    index = (index - 1 + totalCards) % totalCards; // boucle infinie
+    updateCarousel();
+  });
+
+  updateCarousel();
 });
