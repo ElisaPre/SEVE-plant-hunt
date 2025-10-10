@@ -109,25 +109,36 @@
       background: #fff;
     }
 
+        /* Zone ambrée avec un peu de marge à l'intérieur */
     .section-amber {
       background: #ffcc80;
       color: #111;
       flex-direction: row;
       justify-content: space-between;
       text-align: left;
+      padding-left: 20px;  /* marge gauche */
+      padding-right: 20px; /* marge droite */
+      box-sizing: border-box; /* pour inclure le padding dans la largeur */
     }
-
-    .section-amber img {
-      max-width: 90%;  /* ne dépasse jamais de la page */
-      width: auto;      /* s’adapte à l’espace disponible */
-      border-radius: 12px;
-    }
-
+    
+    /* Texte à l'intérieur */
     .section-amber .text {
-      width: 70%;
+      width: 50%;
       font-size: 1.2rem;
       font-weight: bold;
+      padding-right: 10px; /* un peu de marge entre texte et image */
+      box-sizing: border-box;
     }
+    
+    /* Image */
+    .section-amber img {
+      max-width: 400px;
+      width: 45%;
+      border-radius: 12px;
+      padding-left: 10px; /* un peu de marge entre image et texte */
+      box-sizing: border-box;
+    }
+
 
     /* --- Main Content (bienvenue) --- */
     #main-content {
