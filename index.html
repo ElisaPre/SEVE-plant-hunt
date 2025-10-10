@@ -143,7 +143,7 @@
   position: relative;
   width: 90%;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto;
   overflow: hidden;
 }
 
@@ -154,13 +154,17 @@
 }
 
 .card {
-  min-width: 250px;
+  min-width: 180px;      /* largeur fixe */
+  height: 280px;         /* plus haut que large → vertical */
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card:hover {
@@ -169,26 +173,22 @@
 
 .card img {
   width: 100%;
-  height: 180px;
+  height: 60%;   /* image prend 60% de la hauteur */
   object-fit: cover;
 }
 
 .card-body {
-  padding: 15px;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
 }
 
 .card-body h3 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #b87333;
 }
 
-.card-body p {
-  font-size: 0.9rem;
-  color: #555;
-}
-
+/* Boutons carrousel */
 .carousel-btn {
   position: absolute;
   top: 50%;
