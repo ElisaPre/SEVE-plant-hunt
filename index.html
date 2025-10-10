@@ -44,7 +44,7 @@
       background: #e69500;
     }
 
-    /* --- Overlay Auth (inchangé) --- */
+    /* --- Overlay Auth --- */
     .overlay {
       position: fixed;
       inset: 0;
@@ -91,15 +91,12 @@
 
     /* --- Sections visuelles --- */
     .section {
-      width: 100vw;
-      max-width: 100%;
+      width: 100%;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 60px 20px;
       text-align: center;
-      box-sizing: border-box;
     }
 
     .section-white {
@@ -109,22 +106,21 @@
     .section-amber {
       background: #ffcc80;
       color: #111;
-      flex-direction: column;
-      gap: 20px;
-      text-align: center;
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
     }
 
     .section-amber img {
-      width: 90%;
       max-width: 400px;
+      width: 45%;
       border-radius: 12px;
     }
 
     .section-amber .text {
-      width: 90%;
-      font-size: 1.1rem;
+      width: 50%;
+      font-size: 1.2rem;
       font-weight: bold;
-      text-align: center;
     }
 
     /* --- Main Content (bienvenue) --- */
@@ -134,7 +130,6 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      width: 100%;
     }
 
     #main-content h1 {
@@ -146,11 +141,10 @@
     /* --- Carrousel --- */
     .carousel-container {
       position: relative;
-      width: 90vw;
-      max-width: 400px;
+      width: 260px;
       height: 340px;
       margin: 40px auto;
-      perspective: 1000px;
+      perspective: 1000px; /* effet 3D */
     }
 
     .carousel-track {
@@ -165,10 +159,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 80%;
-      max-width: 220px;
+      width: 220px;
       height: 320px;
-      background: #ffe5b4;
+      background: #ffe5b4; /* orange clair */
       border-radius: 12px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       display: flex;
@@ -208,28 +201,6 @@
     .carousel-btn.next {
       right: -70px;
     }
-
-    /* --- Responsive Mobile --- */
-    @media (max-width: 600px) {
-      .section-amber {
-        flex-direction: column;
-      }
-      .section-amber .text,
-      .section-amber img {
-        width: 95%;
-      }
-      .carousel-container {
-        width: 95vw;
-      }
-      .card {
-        width: 90%;
-      }
-      .carousel-btn.prev,
-      .carousel-btn.next {
-        left: 5px;
-        right: 5px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -240,7 +211,7 @@
     <button id="btn-signout">Se déconnecter</button>
   </header>
 
-  <!-- Overlay Auth (inchangé) -->
+  <!-- Overlay Auth -->
   <div id="auth-overlay" class="overlay">
     <div class="auth-card">
       <h2>Connexion / Inscription</h2>
@@ -268,6 +239,7 @@
       </div>
       <img src="Campus-Triolet-2023.jpg" alt="Carte du campus">
     </div>
+
   </div>
 
   <!-- Section carrousel des cartes -->
@@ -281,12 +253,54 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- Script du carrousel -->
   <script src="js/cards.js"></script>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
-  <script src="js/app.js"></script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('auth-overlay');
+      const mainContent = document.getElementById('main-content');
+      const btnSignup = document.getElementById('btn-signup');
+      const btnSignin = document.getElementById('btn-signin');
+      const btnSignout = document.getElementById('btn-signout');
+
+      // Vérifier si l'utilisateur est connecté
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          overlay.style.display = 'none';
+          mainContent.style.display = 'flex';
+        } else {
+          overlay.style.display = 'flex';
+          mainContent.style.display = 'none';
+        }
+      });
+
+      // Inscription
+      btnSignup.addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        auth.createUserWithEmailAndPassword(email, password)
+          .catch(error => alert(error.message));
+      });
+
+      // Connexion
+      btnSignin.addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        auth.signInWithEmailAndPassword(email, password)
+          .catch(error => alert(error.message));
+      });
+
+      // Déconnexion
+      btnSignout.addEventListener('click', () => {
+        auth.signOut();
+      });
+    });
+  </script>
 </body>
 </html>
