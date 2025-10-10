@@ -220,11 +220,13 @@
       right: -70px;
     }
 
-      @media (max-width: 480px) {
+        @media (max-width: 480px) {
     .carousel-container {
-      width: 90vw;     
-      max-width: none; 
-      height: auto; /* on laisse la hauteur s’adapter */
+      width: 90vw;          
+      max-width: none;      
+      height: calc(70vw * 320 / 220); /* garde le ratio carte */
+      position: relative;   /* important pour les cartes absolute */
+      margin: 40px auto;    
     }
   
     .carousel-btn.prev {
@@ -236,9 +238,10 @@
     }
   
     .card {
-      width: 70vw;            /* largeur réduite pour mobile */
-      aspect-ratio: 220 / 320; /* conserve le ratio largeur/hauteur original */
-      max-height: 300px;      /* limite la hauteur si besoin */
+      width: 70vw;             
+      height: 100%;            /* prend toute la hauteur du container */
+      border-radius: 12px;
+      box-sizing: border-box;
     }
 }
 
