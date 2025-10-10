@@ -141,21 +141,20 @@
     /* --- Carrousel --- */
 .carousel-container {
   position: relative;
-  width: 90%;
-  max-width: 1000px;
-  margin: 20px auto;
+  width: 100%;
+  max-width: 300px; /* largeur ≈ taille d'une carte */
+  margin: 40px auto; /* centré */
   overflow: hidden;
 }
 
 .carousel-track {
   display: flex;
-  gap: 20px;
   transition: transform 0.4s ease;
 }
 
 .card {
-  min-width: 180px;      /* largeur fixe */
-  height: 280px;         /* plus haut que large → vertical */
+  min-width: 100%;   /* 1 seule carte visible */
+  height: 280px;     /* rectangle vertical */
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -167,13 +166,9 @@
   justify-content: space-between;
 }
 
-.card:hover {
-  transform: scale(1.05);
-}
-
 .card img {
   width: 100%;
-  height: 60%;   /* image prend 60% de la hauteur */
+  height: 60%;
   object-fit: cover;
 }
 
@@ -196,13 +191,13 @@
   background: #ffb347;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
-  z-index: 10;
+  z-index: 20;
 }
 
 .carousel-btn:hover {
@@ -210,11 +205,11 @@
 }
 
 .carousel-btn.prev {
-  left: -10px;
+  left: -60px; /* bien visible, pas coupée */
 }
 
 .carousel-btn.next {
-  right: -10px;
+  right: -60px;
 }
   </style>
 </head>
