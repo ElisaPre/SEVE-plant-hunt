@@ -209,13 +209,26 @@
       right: -70px;
     }
 
-    /* Évite le débordement sur mobile */
-    @media (max-width: 480px) {
-    .carousel-btn.prev {
-      left: 5px;   /* juste à l'intérieur de l'écran */
+      /* --- Adaptation carrousel mobile --- */
+  @media (max-width: 480px) {
+    .carousel-container {
+      width: 90vw;     
+      max-width: none; 
+      height: 300px;   
     }
+  
+    .carousel-btn.prev {
+      left: 5px;       
+    }
+  
     .carousel-btn.next {
-      right: 5px;  /* juste à l'intérieur de l'écran */
+      right: 5px;
+    }
+  
+    .card {
+      width: 70vw;     
+      height: auto;    
+      max-height: 300px;
     }
 }
 
