@@ -18,36 +18,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
 
   function updateCarousel() {
+    const cardWidth = cardElements[0].offsetWidth + 20; // 20px gap si tu veux
     cardElements.forEach((card, index) => {
-      const offset = index - currentIndex;
+    const offset = index - currentIndex;
 
-      if (offset === 0) {
-        // Carte centrale
-        card.style.transform = "translateX(0) scale(1)";
-        card.style.opacity = "1";
-        card.style.filter = "blur(0px)";
-        card.style.zIndex = "3";
-      } else if (offset === -1) {
-        // Carte gauche
-        card.style.transform = "translateX(-260px) scale(0.9)";
-        card.style.opacity = "0.6";
-        card.style.filter = "blur(3px)";
-        card.style.zIndex = "2";
-      } else if (offset === 1) {
-        // Carte droite
-        card.style.transform = "translateX(260px) scale(0.9)";
-        card.style.opacity = "0.6";
-        card.style.filter = "blur(3px)";
-        card.style.zIndex = "2";
-      } else {
-        // Les autres cartes derrière
-        card.style.transform = "translateX(0) scale(0.8)";
-        card.style.opacity = "0";
-        card.style.filter = "blur(5px)";
-        card.style.zIndex = "1";
-      }
-    });
-  }
+    if (offset === 0) {
+      // Carte centrale
+      card.style.transform = `translateX(0) scale(1)`;
+      card.style.opacity = "1";
+      card.style.filter = "blur(0px)";
+      card.style.zIndex = "3";
+    } else if (offset === -1) {
+      // Carte gauche
+      card.style.transform = `translateX(-${cardWidth}px) scale(0.9)`;
+      card.style.opacity = "0.6";
+      card.style.filter = "blur(3px)";
+      card.style.zIndex = "2";
+    } else if (offset === 1) {
+      // Carte droite
+      card.style.transform = `translateX(${cardWidth}px) scale(0.9)`;
+      card.style.opacity = "0.6";
+      card.style.filter = "blur(3px)";
+      card.style.zIndex = "2";
+    } else {
+      // Les autres cartes derrière
+      card.style.transform = `translateX(0) scale(0.8)`;
+      card.style.opacity = "0";
+      card.style.filter = "blur(5px)";
+      card.style.zIndex = "1";
+    }
+  });
+}
+
 
   prevBtn.addEventListener("click", () => {
     currentIndex = (currentIndex - 1 + cardElements.length) % cardElements.length;
