@@ -3,24 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnPrev = document.querySelector(".carousel-btn.prev");
   const btnNext = document.querySelector(".carousel-btn.next");
 
-  // Cartes factices
+  // Cartes factices pour test
   const cards = [
-    { id: "card001", name: "Algus rubra" },
-    { id: "card002", name: "Bostrychia moritziana" },
-    { id: "card003", name: "Ceramium tenuicorne" },
-    { id: "card004", name: "Chondrus crispus" },
-    { id: "card005", name: "Gracilaria verrucosa" }
+    { id: "card001", name: "Plante 1" },
+    { id: "card002", name: "Plante 2" },
+    { id: "card003", name: "Plante 3" },
+    { id: "card004", name: "Plante 4" }
   ];
 
   // Génération des cartes
   cards.forEach(card => {
     const cardEl = document.createElement("div");
     cardEl.classList.add("card");
-    cardEl.innerHTML = `
-      <div class="card-body">
-        <h3>${card.name}</h3>
-      </div>
-    `;
+    cardEl.textContent = card.name; // juste le nom
     track.appendChild(cardEl);
   });
 
@@ -37,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnPrev.addEventListener("click", () => {
-    index = (index - 1 + totalCards) % totalCards; // boucle infinie
+    index = (index - 1 + totalCards) % totalCards;
     updateCarousel();
   });
 
