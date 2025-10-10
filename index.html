@@ -5,6 +5,10 @@
   <title>Pokedex QR — Projet</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
+    /* Empêche tout débordement horizontal sur mobile */
+    html {
+      overflow-x: hidden;
+    }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -204,6 +208,17 @@
     .carousel-btn.next {
       right: -70px;
     }
+
+    /* Évite le débordement sur mobile */
+    @media (max-width: 480px) {
+    .carousel-btn.prev {
+      left: 5px;   /* juste à l'intérieur de l'écran */
+    }
+    .carousel-btn.next {
+      right: 5px;  /* juste à l'intérieur de l'écran */
+    }
+}
+
   </style>
 </head>
 <body>
