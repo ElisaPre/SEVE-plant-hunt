@@ -1,63 +1,64 @@
 document.addEventListener("DOMContentLoaded", () => {
   const track = document.getElementById("carousel-track");
-  const btnPrev = document.querySelector(".carousel-btn.prev");
-  const btnNext = document.querySelector(".carousel-btn.next");
+  const prevBtn = document.querySelector(".carousel-btn.prev");
+  const nextBtn = document.querySelector(".carousel-btn.next");
 
-  // Cartes test
-  const cards = [
-    { id: "card001", name: "Plante 1" },
-    { id: "card002", name: "Plante 2" },
-    { id: "card003", name: "Plante 3" },
-    { id: "card004", name: "Plante 4" }
-  ];
+  // Exemple de cartes (remplace par tes vraies données)
+  const cards = ["Plante 1", "Plante 2", "Plante 3", "Plante 4", "Plante 5"];
 
-  // Génération
-  cards.forEach(card => {
-    const cardEl = document.createElement("div");
-    cardEl.classList.add("card");
-    cardEl.textContent = card.name;
-    track.appendChild(cardEl);
+  // Génération des cartes
+  cards.forEach(text => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.textContent = text;
+    track.appendChild(card);
   });
 
-  // Clonage première + dernière pour effet loop
-  const firstClone = track.firstElementChild.cloneNode(true);
-  const lastClone = track.lastElementChild.cloneNode(true);
-  track.appendChild(firstClone);
-  track.insertBefore(lastClone, track.firstElementChild);
+  const cardElements = Array.from(track.children);
+  let currentIndex = 0;
 
-  const allCards = document.querySelectorAll(".card");
-  let index = 1; // on commence sur la vraie 1ère carte
-  const cardWidth = allCards[0].offsetWidth;
+  function updateCarousel() {
+    cardElements.forEach((card, index) => {
+      const offset = index - currentIndex;
 
-  track.style.transform = `translateX(${-cardWidth * index}px)`;
-
-  function moveToIndex() {
-    track.style.transition = "transform 0.4s ease";
-    track.style.transform = `translateX(${-cardWidth * index}px)`;
+      if (offset === 0) {
+        // Carte centrale
+        card.style.transform = "translateX(0) scale(1)";
+        card.style.opacity = "1";
+        card.style.filter = "blur(0px)";
+        card.style.zIndex = "3";
+      } else if (offset === -1) {
+        // Carte gauche
+        card.style.transform = "translateX(-260px) scale(0.9)";
+        card.style.opacity = "0.6";
+        card.style.filter = "blur(3px)";
+        card.style.zIndex = "2";
+      } else if (offset === 1) {
+        // Carte droite
+        card.style.transform = "translateX(260px) scale(0.9)";
+        card.style.opacity = "0.6";
+        card.style.filter = "blur(3px)";
+        card.style.zIndex = "2";
+      } else {
+        // Les autres cartes derrière
+        card.style.transform = "translateX(0) scale(0.8)";
+        card.style.opacity = "0";
+        card.style.filter = "blur(5px)";
+        card.style.zIndex = "1";
+      }
+    });
   }
 
-  btnNext.addEventListener("click", () => {
-    if (index >= allCards.length - 1) return;
-    index++;
-    moveToIndex();
+  prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + cardElements.length) % cardElements.length;
+    updateCarousel();
   });
 
-  btnPrev.addEventListener("click", () => {
-    if (index <= 0) return;
-    index--;
-    moveToIndex();
+  nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % cardElements.length;
+    updateCarousel();
   });
 
-  track.addEventListener("transitionend", () => {
-    if (allCards[index].textContent === "Plante 1" && index === allCards.length - 1) {
-      track.style.transition = "none";
-      index = 1;
-      track.style.transform = `translateX(${-cardWidth * index}px)`;
-    }
-    if (allCards[index].textContent === "Plante 4" && index === 0) {
-      track.style.transition = "none";
-      index = allCards.length - 2;
-      track.style.transform = `translateX(${-cardWidth * index}px)`;
-    }
-  });
+  // Init au chargement
+  updateCarousel();
 });
