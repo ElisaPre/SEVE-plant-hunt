@@ -141,9 +141,9 @@
     /* --- Carrousel --- */
 .carousel-container {
   position: relative;
-  width: 300px; /* largeur fixe = 1 carte */
-  margin: 40px auto; /* centré */
-  overflow: visible; /* pour ne pas couper les flèches */
+  width: 220px;   /* largeur fixe ≈ carte */
+  margin: 40px auto; 
+  overflow: hidden; /* masque les cartes en dehors */
 }
 
 .carousel-track {
@@ -153,10 +153,10 @@
 
 .card {
   min-width: 100%;
-  height: 280px;
-  background: #ffe5b4; /* couleur de fond test */
+  height: 320px;   /* vertical rectangle */
+  background: #ffe5b4; /* orange clair */
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
