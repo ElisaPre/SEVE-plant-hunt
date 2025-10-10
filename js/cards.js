@@ -1,51 +1,50 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   const track = document.getElementById("carousel-track");
   const btnPrev = document.querySelector(".carousel-btn.prev");
   const btnNext = document.querySelector(".carousel-btn.next");
 
-  try {
-    // Charger le JSON
-    const response = await fetch("cards.json");
-    const cards = await response.json();
+  // Cartes factices pour test
+  const cards = [
+    { id: "card001", name: "Plante 1" },
+    { id: "card002", name: "Plante 2" },
+    { id: "card003", name: "Plante 3" },
+    { id: "card004", name: "Plante 4" },
+    { id: "card005", name: "Plante 5" },
+    { id: "card006", name: "Plante 6" }
+  ];
 
-    // Générer les cartes
-    cards.forEach(card => {
-      const cardEl = document.createElement("div");
-      cardEl.classList.add("card");
-      cardEl.innerHTML = `
-        <img src="${card.image}" alt="${card.name}">
-        <div class="card-body">
-          <h3>${card.name}</h3>
-          <p>${card.description}</p>
-        </div>
-      `;
-      cardEl.addEventListener("click", () => {
-        window.location.href = `card.html?id=${card.id}`;
-      });
-      track.appendChild(cardEl);
+  // Génération simple
+  cards.forEach(card => {
+    const cardEl = document.createElement("div");
+    cardEl.classList.add("card");
+    cardEl.innerHTML = `
+      <div class="card-body">
+        <h3>${card.name}</h3>
+      </div>
+    `;
+    cardEl.addEventListener("click", () => {
+      window.location.href = `card.html?id=${card.id}`;
     });
+    track.appendChild(cardEl);
+  });
 
-    // Variables pour le défilement
-    let index = 0;
-    const cardWidth = 270; // largeur + marge
-    const visibleCards = Math.floor(track.parentElement.offsetWidth / cardWidth);
+  // Variables pour défilement
+  let index = 0;
+  const cardWidth = 270;
+  const visibleCards = Math.floor(track.parentElement.offsetWidth / cardWidth);
 
-    // Boutons
-    btnPrev.addEventListener("click", () => {
-      if (index > 0) {
-        index--;
-        track.style.transform = `translateX(${-index * cardWidth}px)`;
-      }
-    });
+  // Boutons
+  btnPrev.addEventListener("click", () => {
+    if (index > 0) {
+      index--;
+      track.style.transform = `translateX(${-index * cardWidth}px)`;
+    }
+  });
 
-    btnNext.addEventListener("click", () => {
-      if (index < cards.length - visibleCards) {
-        index++;
-        track.style.transform = `translateX(${-index * cardWidth}px)`;
-      }
-    });
-
-  } catch (err) {
-    console.error("Erreur chargement des cartes :", err);
-  }
+  btnNext.addEventListener("click", () => {
+    if (index < cards.length - visibleCards) {
+      index++;
+      track.style.transform = `translateX(${-index * cardWidth}px)`;
+    }
+  });
 });
