@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (offset === 0) {
         // Carte centrale
-        card.style.transform = `translateX(0) scale(1)`;
+        card.style.transform = `translateX(-50%) scale(1)`;
         card.style.opacity = "1";
         card.style.filter = "blur(0px)";
         card.style.zIndex = "3";
