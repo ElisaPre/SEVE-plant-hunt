@@ -158,7 +158,7 @@
     /* --- Carrousel --- */
     .carousel-container {
       position: relative;
-      width: 260px;
+      width: 320px; /* au lieu de 260px */
       height: 340px;
       margin: 40px auto;
       perspective: 1000px;
@@ -182,7 +182,8 @@
     .card {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 50%; /* centre horizontalement */
+      transform: translateX(-50%);
       width: 220px;
       height: 320px;
       background: #ffe5b4; /* orange clair */
