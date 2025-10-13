@@ -42,13 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
         card.style.zIndex = "3";
       } else if (offset === -1) {
         // Carte gauche
-        card.style.transform = `translateX(-${cardWidth}px) scale(0.9)`;
+        card.style.transform = `translateX(calc(-${cardWidth}px - 50%)) scale(0.9)`;
         card.style.opacity = "0.6";
         card.style.filter = "blur(3px)";
         card.style.zIndex = "2";
       } else if (offset === 1) {
         // Carte droite
-        card.style.transform = `translateX(${cardWidth}px) scale(0.9)`;
+        card.style.transform = `translateX(calc(${cardWidth}px - 50%)) scale(0.9)`;
         card.style.opacity = "0.6";
         card.style.filter = "blur(3px)";
         card.style.zIndex = "2";
