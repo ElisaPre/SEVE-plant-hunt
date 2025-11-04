@@ -5,18 +5,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Liste des plantes avec pages associées
   const cards = [
-    { name: "Plante 1", page: "plantes/chene.html" },
-    { name: "Plante 2", page: "plantes/erable.html" },
-    { name: "Plante 3", page: "plantes/pin.html" },
-    { name: "Plante 4", page: "plantes/plante4.html" },
-    { name: "Plante 5", page: "plantes/plante5.html" }
+    { name: "Plante 1", page: "plantes/chene.html", image: "Agave.png" },
+    { name: "Plante 2", page: "plantes/erable.html", image: "Arbre de Judée.png" },
+    { name: "Plante 3", page: "plantes/pin.html", image: "Cyprès vert.png" },
+    { name: "Plante 4", page: "plantes/plante4.html", image: "Faux poivrier.png" },
+    { name: "Plante 5", page: "plantes/plante5.html", image: "Figuier de barbarie.png" },
+    { name: "Plante 6", page: "plantes/plante5.html", image: "Genevrier.png" },
+    { name: "Plante 7", page: "plantes/plante5.html", image: "Laurier-sauce.png" },
+    { name: "Plante 8", page: "plantes/plante5.html", image: "Lilas des Indes.png" },
+    { name: "Plante 9", page: "plantes/plante5.html", image: "Magnolia.png" },
+    { name: "Plante 10", page: "plantes/plante5.html", image: "Olivier.png" },
+    { name: "Plante 11", page: "plantes/plante5.html", image: "Pin parasol.png" },
+    { name: "Plante 12", page: "plantes/plante5.html", image: "Sumac de Virginie.png" },
+    { name: "Plante 13", page: "plantes/plante5.html", image: "Vigne.png" },
+    { name: "Plante 14", page: "plantes/plante5.html", image: "Yucca.png" }
   ];
 
   // Génération des cartes
   cards.forEach(cardData => {
     const card = document.createElement("div");
     card.className = "card";
-    card.textContent = cardData.name;
+
+    // Image
+    const img = document.createElement("img");
+    img.src = cardData.image;
+    img.alt = cardData.name;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover"; // couvre toute la carte
+    img.style.borderRadius = "12px";
+
+    card.appendChild(img);
 
     // Clique → redirige vers la page correspondante
     card.addEventListener("click", () => {
