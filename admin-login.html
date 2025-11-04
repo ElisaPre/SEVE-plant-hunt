@@ -5,57 +5,115 @@
   <title>Admin — Connexion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --fw-bg: #2a0d00;
+      --fw-dark: #1b0400;
+      --fw-accent: #ff9b00;
+      --fw-text: #fbe4b3;
+      --fw-btn-hover: #ffb733;
+      --fw-font: 'Oswald', sans-serif;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #fff8f0;
+      font-family: var(--fw-font);
+      background: linear-gradient(180deg, var(--fw-dark) 0%, var(--fw-bg) 100%);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      color: var(--fw-text);
     }
+
     .auth-card {
-      background: #fff;
+      background: rgba(40, 15, 0, 0.95);
+      border: 1px solid rgba(255, 155, 0, 0.2);
       padding: 40px;
       border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
       max-width: 400px;
       width: 90%;
-    }
-    .auth-card h2 {
-      color: #b87333;
-      margin-bottom: 20px;
       text-align: center;
+      backdrop-filter: blur(6px);
     }
+
+    .auth-card h2 {
+      color: var(--fw-accent);
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+      font-size: 1.8rem;
+    }
+
     .auth-card input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .auth-card button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 12px;
       border: none;
       border-radius: 6px;
-      background: #ffb347;
-      color: #fff;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .auth-card input:focus {
+      box-shadow: 0 0 8px var(--fw-accent);
+    }
+
+    .auth-card button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 14px;
+      border: none;
+      border-radius: 6px;
+      background: var(--fw-accent);
+      color: var(--fw-dark);
       font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s ease, transform 0.1s ease;
     }
+
     .auth-card button:hover {
-      background: #e69500;
+      background: var(--fw-btn-hover);
+      transform: scale(1.02);
+    }
+
+    .auth-card p {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--fw-text);
+    }
+
+    .auth-card a {
+      color: var(--fw-accent);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    .auth-card a:hover {
+      color: var(--fw-btn-hover);
+    }
+
+    @media (max-width: 480px) {
+      .auth-card {
+        padding: 30px 20px;
+      }
+      .auth-card h2 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="auth-card">
     <h2>Connexion Admin</h2>
     <input id="email" type="email" placeholder="Email admin" />
     <input id="password" type="password" placeholder="Mot de passe" />
     <button id="btn-login">Se connecter</button>
+    <p><a href="index.html">← Retour à l'accueil</a></p>
   </div>
 
   <!-- Firebase SDK -->
