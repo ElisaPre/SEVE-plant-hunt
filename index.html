@@ -5,24 +5,36 @@
   <title>SEVE - The Plant Hunt</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    /* Empêche tout débordement horizontal sur mobile */
+    /* ---- Thème Firewatch intégré ---- */
+    :root {
+      --fw-bg: #2a0d00;
+      --fw-dark: #1b0400;
+      --fw-accent: #ff9b00;
+      --fw-text: #fbe4b3;
+      --fw-btn-hover: #ffb733;
+      --fw-font: 'Oswald', sans-serif;
+    }
+
     html {
       overflow-x: hidden;
     }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: var(--fw-font);
       margin: 0;
       padding: 0;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      background: #fff8f0;
-      overflow-x: hidden; /* empêche le scroll horizontal */
+      background: var(--fw-bg);
+      color: var(--fw-text);
+      overflow-x: hidden;
     }
-    /* --- Bannière noire --- */
+
+    /* --- Bannière (ancien header noir → version Firewatch) --- */
     header {
-      background: #111;
-      color: #fff;
+      background: var(--fw-dark);
+      color: var(--fw-accent);
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -31,30 +43,33 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      width: 100%;       /* <- force la largeur totale */
-      box-sizing: border-box; /* <- inclut le padding dans la largeur */
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 2px solid var(--fw-accent);
     }
 
     header a, header button {
-      color: #fff;
+      color: var(--fw-dark);
       text-decoration: none;
-      background: #ffb347;
+      background: var(--fw-accent);
       border: none;
       border-radius: 6px;
       padding: 8px 16px;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
     }
 
     header a:hover, header button:hover {
-      background: #e69500;
+      background: var(--fw-btn-hover);
+      color: var(--fw-dark);
     }
 
     /* --- Overlay Auth --- */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.7);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -62,12 +77,13 @@
     }
 
     .auth-card {
-      background: #fff;
+      background: var(--fw-dark);
+      color: var(--fw-text);
       padding: 40px;
       border-radius: 12px;
       max-width: 400px;
       width: 90%;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 20px rgba(255, 155, 0, 0.2);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -77,22 +93,26 @@
     .auth-card input {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--fw-accent);
       border-radius: 6px;
+      background: #3b1c00;
+      color: var(--fw-text);
     }
 
     .auth-card button {
       padding: 10px 20px;
       border: none;
       border-radius: 6px;
-      background: #ffb347;
-      color: #fff;
+      background: var(--fw-accent);
+      color: var(--fw-dark);
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
     }
 
     .auth-card button:hover {
-      background: #e69500;
+      background: var(--fw-btn-hover);
     }
 
     /* --- Sections visuelles --- */
@@ -106,41 +126,39 @@
     }
 
     .section-white {
-      background: #fff;
+      background: var(--fw-dark);
+      color: var(--fw-text);
     }
 
-        /* Zone ambrée avec un peu de marge à l'intérieur */
     .section-amber {
-      background: #ffcc80;
-      color: #111;
+      background: #3b1c00;
+      color: var(--fw-text);
       flex-direction: row;
       justify-content: space-between;
       text-align: left;
-      padding-left: 20px;  /* marge gauche */
-      padding-right: 20px; /* marge droite */
-      box-sizing: border-box; /* pour inclure le padding dans la largeur */
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
     }
-    
-    /* Texte à l'intérieur */
+
     .section-amber .text {
       width: 50%;
       font-size: 1.2rem;
       font-weight: bold;
-      padding-right: 10px; /* un peu de marge entre texte et image */
+      padding-right: 10px;
       box-sizing: border-box;
     }
-    
-    /* Image */
+
     .section-amber img {
       max-width: 400px;
       width: 50%;
       border-radius: 12px;
-      padding-left: 7px; /* un peu de marge entre image et texte */
+      padding-left: 7px;
       box-sizing: border-box;
+      box-shadow: 0 0 15px rgba(255, 155, 0, 0.3);
     }
 
-
-    /* --- Main Content (bienvenue) --- */
+    /* --- Main Content --- */
     #main-content {
       display: none;
       flex: 1;
@@ -150,27 +168,22 @@
     }
 
     #main-content h1 {
-      color: #b87333;
+      color: var(--fw-accent);
       font-size: 2rem;
       margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     /* --- Carrousel --- */
     .carousel-container {
       position: relative;
-      width: 320px; /* au lieu de 260px */
+      width: 320px;
       height: 340px;
       margin: 40px auto;
       perspective: 1000px;
     }
-        
-    .carousel-btn.prev {
-      left: -70px;
-    }
-    
-    .carousel-btn.next {
-      right: -70px;
-    }
+
     .carousel-track {
       position: relative;
       width: 100%;
@@ -182,28 +195,27 @@
     .card {
       position: absolute;
       top: 0;
-      left: 50%; /* centre horizontalement */
+      left: 50%;
       transform: translateX(-50%);
       width: 220px;
       height: 320px;
-      background: #ffe5b4; /* orange clair */
+      background: #4a1f00;
       border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
       font-weight: bold;
-      color: #b87333;
+      color: var(--fw-accent);
       transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
     }
 
-    /* Boutons carrousel */
     .carousel-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #ffb347;
+      background: var(--fw-accent);
       border: none;
       border-radius: 50%;
       width: 45px;
@@ -211,52 +223,58 @@
       cursor: pointer;
       font-size: 1.5rem;
       font-weight: bold;
-      color: white;
+      color: var(--fw-dark);
       z-index: 50;
+      transition: 0.2s;
     }
 
     .carousel-btn:hover {
-      background: #ffb347;
+      background: var(--fw-btn-hover);
     }
 
-
-        @media (max-width: 480px) {
-    .carousel-container {
-      width: 90vw;          
-      max-width: none;      
-      height: calc(70vw * 320 / 220); /* garde le ratio carte */
-      position: relative;   /* important pour les cartes absolute */
-      margin: 40px auto;    
-    }
-  
     .carousel-btn.prev {
-      left: 5px;       
+      left: -70px;
     }
-  
+
     .carousel-btn.next {
-      right: 5px;
-    }
-  
-    .card {
-      width: 70vw;             
-      height: 100%;            /* prend toute la hauteur du container */
-      border-radius: 12px;
-      box-sizing: border-box;
+      right: -70px;
     }
 
-    .carousel-track {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-          /* Ajustement du centrage du carrousel sur mobile */
-  @media (max-width: 480px) {
-    .carousel-container {
-      margin-left: -3px; /* décale légèrement vers la gauche */
-    }
+    /* --- Responsive --- */
+    @media (max-width: 480px) {
+      .carousel-container {
+        width: 90vw;
+        max-width: none;
+        height: calc(70vw * 320 / 220);
+        position: relative;
+        margin: 40px auto;
+      }
 
-}
+      .carousel-btn.prev {
+        left: 5px;
+      }
 
+      .carousel-btn.next {
+        right: 5px;
+      }
+
+      .card {
+        width: 70vw;
+        height: 100%;
+        border-radius: 12px;
+        box-sizing: border-box;
+      }
+
+      .carousel-track {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .carousel-container {
+        margin-left: -3px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -277,11 +295,6 @@
       <button id="btn-signin">Se connecter</button>
     </div>
   </div>
-
-  <!-- Main Content -->
-  <div id="main-content">
-    <h1>Bienvenue sur Pokedex QR !</h1>
-    <p>Vous êtes connecté.</p>
 
     <!-- Section blanche -->
     <div class="section section-white">
