@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cards = [
     { name: "Plante 1", page: "plantes/agave.html", image: "Agave.png" },
     { name: "Plante 2", page: "plantes/Arbre-de-Judee.html", image: "Arbre de Judée.png" },
-    { name: "Plante 3", page: "plantes/pin.html", image: "Cyprès vert.png" },
+    { name: "Plante 3", page: "plantes/Cypres-vert.html", image: "Cyprès vert.png" },
     { name: "Plante 4", page: "plantes/plante4.html", image: "Faux poivrier.png" },
     { name: "Plante 5", page: "plantes/plante5.html", image: "Figuier de barbarie.png" },
     { name: "Plante 6", page: "plantes/plante5.html", image: "Genevrier.png" },
