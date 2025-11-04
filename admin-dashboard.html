@@ -5,31 +5,97 @@
   <title>Admin — Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial; padding: 20px; background: #fff8f0; }
-    h2 { color: #b87333; }
-    button { padding: 8px 16px; margin: 5px; background: #ffb347; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #e69500; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fff8f0;
+      color: #333;
+    }
+
+    h2 {
+      color: #b87333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      background: #ffb347;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #e69500;
+    }
+
+    h3 {
+      margin-top: 30px;
+      color: #b87333;
+      border-bottom: 2px solid #ffb347;
+      padding-bottom: 5px;
+    }
+
+    #captures-feed {
+      margin-top: 20px;
+      max-width: 800px;
+    }
+
+    .capture-item {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .capture-item strong {
+      color: #b87333;
+    }
+
+    .small {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .loading {
+      font-style: italic;
+      color: #999;
+      margin-top: 15px;
+    }
   </style>
 </head>
+
 <body>
   <h2>Admin Dashboard</h2>
   <button id="btn-signout">Se déconnecter</button>
   <button id="btn-return-participant">Retour participant</button>
 
-  <!-- FIREBASE -->
+  <h3>Flux des captures (en temps réel)</h3>
+  <div id="captures-feed">
+    <p class="loading">Chargement des données en cours...</p>
+  </div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-  <!-- TON CONFIG -->
+  <!-- Ton fichier de config -->
   <script src="js/firebase-config.js"></script>
 
   <script>
-    // S'assurer que auth et db sont déclarés dans firebase-config.js
-    // Déconnexion
     const btnSignout = document.getElementById('btn-signout');
     const btnReturnParticipant = document.getElementById('btn-return-participant');
+    const feed = document.getElementById('captures-feed');
 
+    // Déconnexion
     btnSignout.addEventListener('click', () => {
       auth.signOut().then(() => window.location.href = 'admin-login.html');
     });
@@ -38,13 +104,56 @@
       auth.signOut().then(() => window.location.href = 'index.html');
     });
 
-    // Vérifie que l'utilisateur est bien connecté
+    // Vérifie que l'utilisateur est bien connecté et admin
     auth.onAuthStateChanged(user => {
       if (!user || user.email !== 'elisa.pregaldiny@gmail.com') {
         alert('Accès refusé');
         window.location.href = 'admin-login.html';
+        return;
       }
+      initRealtimeFeed();
     });
+
+    // Formate une date Firestore en HH:MM:SS
+    function formatTime(ts) {
+      if (!ts) return '';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    // Initialise le flux temps réel des captures
+    function initRealtimeFeed() {
+      const db = firebase.firestore();
+
+      db.collection('captures')
+        .orderBy('timestamp', 'desc')
+        .limit(100)
+        .onSnapshot(snapshot => {
+          feed.innerHTML = '';
+          if (snapshot.empty) {
+            feed.innerHTML = '<p class="loading">Aucune capture pour le moment.</p>';
+            return;
+          }
+
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const time = formatTime(data.timestamp);
+            const div = document.createElement('div');
+            div.className = 'capture-item';
+            div.innerHTML = `
+              <div><strong>${data.userEmail}</strong> a capturé <em>${data.plantName || 'plante inconnue'}</em></div>
+              <div class="small">Heure : ${time}${data.codeEntered ? ' • Code : ' + data.codeEntered : ''}</div>
+            `;
+            feed.appendChild(div);
+          });
+        }, err => {
+          console.error("Erreur Firestore :", err);
+          feed.innerHTML = '<p class="loading" style="color:red;">Erreur de lecture des captures.</p>';
+        });
+    }
   </script>
 </body>
 </html>
