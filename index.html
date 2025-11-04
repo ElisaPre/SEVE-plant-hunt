@@ -275,6 +275,36 @@
         margin-left: -3px;
       }
     }
+    /* --- Image zoomable --- */
+.clickable-img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: zoom-in;
+  border-radius: 12px;
+}
+
+.clickable-img:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Mode plein écran */
+.clickable-img.enlarged {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 90vw;
+  height: auto;
+  max-height: 90vh;
+  z-index: 9999;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  cursor: zoom-out;
+  border-radius: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
   </style>
 </head>
 <body>
@@ -306,7 +336,7 @@
       <div class="text">
         Ne t'aventure pas trop loin, la zone de recherche est juste ici !
       </div>
-      <img src="Zone de recherche.png" alt="Carte du campus">
+      <img src="Zone de recherche.png" alt="Carte du campus" class="clickable-img">
     </div>
 
   </div>
@@ -371,5 +401,12 @@
       });
     });
   </script>
+  <script>
+  const img = document.querySelector('.clickable-img');
+  img.addEventListener('click', () => {
+    img.classList.toggle('enlarged');
+    document.body.classList.toggle('no-scroll');
+  });
+</script>
 </body>
 </html>
