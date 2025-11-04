@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Plante 5", page: "plantes/Figuier-de-barbarie.html", image: "Figuier de barbarie.png" },
     { name: "Plante 6", page: "plantes/Genevrier.html", image: "Genevrier.png" },
     { name: "Plante 7", page: "plantes/Laurier-sauce.html", image: "Laurier-sauce.png" },
-    { name: "Plante 8", page: "plantes/plante5.html", image: "Lilas des Indes.png" },
+    { name: "Plante 8", page: "plantes/Lilas-des-Indes.html", image: "Lilas des Indes.png" },
     { name: "Plante 9", page: "plantes/plante5.html", image: "Magnolia.png" },
     { name: "Plante 10", page: "plantes/plante5.html", image: "Olivier.png" },
     { name: "Plante 11", page: "plantes/plante5.html", image: "Pin parasol.png" },
