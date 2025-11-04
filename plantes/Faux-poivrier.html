@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Faux poivrier – SEVE</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --fw-bg: #2a0d00; --fw-dark: #1b0400; --fw-accent: #ff9b00; --fw-text: #fbe4b3; --fw-font: 'Oswald', sans-serif;
+    }
+    body { font-family: var(--fw-font); margin: 0; background: var(--fw-bg); color: var(--fw-text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: var(--fw-dark); color: var(--fw-accent); display:flex; justify-content:space-between; align-items:center; padding:10px 20px; border-bottom:2px solid var(--fw-accent); position:sticky; top:0; z-index:100; }
+    header a, header button { color: var(--fw-dark); text-decoration:none; background:var(--fw-accent); border:none; border-radius:6px; padding:8px 16px; font-weight:bold; cursor:pointer; }
+    header a:hover, header button:hover { background: #ffb733; }
+
+    .section-amber { background: #3b1c00; display:flex; flex-direction:row; justify-content:space-between; align-items:center; padding:40px 20px; gap:20px; flex:1; box-sizing:border-box; }
+    .section-amber img { width:45%; max-width:450px; border-radius:12px; box-shadow:0 0 15px rgba(255,155,0,0.3); cursor:zoom-in; transition:transform .3s; }
+    .text { width:50%; font-size:1.1rem; font-weight:600; line-height:1.6; }
+
+    /* zone de code */
+    .code-area { margin-top:20px; display:flex; gap:10px; align-items:center; }
+    .code-area input[type="text"] { padding:10px 12px; border-radius:8px; border:1px solid rgba(255,155,0,0.2); background:#3b1c00; color:var(--fw-text); width:60%; font-size:1rem; }
+    .code-area button { padding:10px 14px; border-radius:8px; border:none; background:var(--fw-accent); color:var(--fw-dark); font-weight:bold; cursor:pointer; }
+    .message { margin-top:12px; padding:10px 14px; border-radius:8px; display:none; font-weight:bold; }
+
+    .message.success { background: rgba(46, 204, 113, 0.12); color: #a1e9a7; border:1px solid rgba(46, 204, 113, 0.2); }
+    .message.error { background: rgba(255, 99, 71, 0.08); color: #ffb3a0; border:1px solid rgba(255,99,71,0.15); }
+
+    .enlarged { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(1); width:90vw; height:auto; max-height:90vh; z-index:9999; box-shadow:0 10px 40px rgba(0,0,0,0.6); cursor:zoom-out; border-radius:0; transition:transform .3s; }
+    body.no-scroll { overflow:hidden; }
+
+    @media (max-width:700px) { .section-amber { flex-direction:column; text-align:center; } .text, .section-amber img { width:90%; } .code-area input[type="text"]{ width:100%; } .code-area{flex-direction:column; align-items:stretch;} }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html">← Retour</a>
+    <span>Faux poivrier</span>
+  </header>
+
+  <div class="section-amber">
+    <img src="../Faux poivrier.png" alt="Faux poivrier" class="clickable-img" id="fauxpoivrier-img" />
+    <div class="text">
+      <h1 style="color:var(--fw-accent); text-transform:uppercase; letter-spacing:1px; margin:0 0 12px 0;">Faux poivrier</h1>
+        <li>Mes baies roses trompent souvent les papilles : elles ne viennent pas d’un vrai poivrier !<li>
+        <li>Mon feuillage léger sent bon quand on le froisse.</li>
+        <li>Je viens d’Amérique du Sud, mais j’adore les climats chauds et secs.</li>
+        <li>JMon port retombant donne un air de douceur et de légèreté.</li>
+      </ul>
+      <p><strong>Indice de localisation :</strong> Entre le 13 et le 14, j’étends mes branches légères et mes grappes de baies roses.</p>
+
+      <!-- ZONE DE CODE -->
+      <div class="code-area" aria-live="polite">
+        <input id="code-input" type="text" placeholder="Tapez le code trouvé ici..." aria-label="Code plante">
+        <button id="validate-btn">Valider le code</button>
+      </div>
+
+      <div id="feedback" class="message" role="status" aria-atomic="true"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs (compat) + ton config -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script> <!-- TA CONFIG : initialise firebase, auth, db -->
+
+  <script>
+    // --- CONFIGURABLE : code attendu pour cette page ---
+    const expectedCode = "POIVRIER-004"; // ← change si tu veux
+
+    // --- métadonnées de la plante (pour l'enregistrement) ---
+    const plantId = "fauxpoivrier003";
+    const plantName = "Faux poivrier";
+
+    const input = document.getElementById('code-input');
+    const btn = document.getElementById('validate-btn');
+    const feedback = document.getElementById('feedback');
+
+    // helper pour afficher un message pendant 7s
+    let feedbackTimer = null;
+    function showFeedback(text, ok = true) {
+      clearTimeout(feedbackTimer);
+      feedback.textContent = text;
+      feedback.className = 'message ' + (ok ? 'success' : 'error');
+      feedback.style.display = 'block';
+      feedbackTimer = setTimeout(() => {
+        feedback.style.display = 'none';
+      }, 7000);
+    }
+
+    // on clique sur valider
+    btn.addEventListener('click', async () => {
+      const code = input.value.trim();
+      if (!code) { showFeedback("Veuillez entrer un code.", false); return; }
+
+      // attendre auth state (utilisateur doit être connecté)
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        showFeedback("Vous devez être connecté pour enregistrer une plante.", false);
+        return;
+      }
+
+      // vérifier le code
+      if (code.toUpperCase() === expectedCode.toUpperCase()) {
+        try {
+          const userEmail = user.email;
+          const db = firebase.firestore();
+
+          // Vérifier si l'utilisateur a déjà capturé cette plante
+          const q = await db.collection('captures')
+            .where('userEmail', '==', userEmail)
+            .where('plantId', '==', plantId)
+            .get();
+
+          if (!q.empty) {
+            // déjà enregistré → afficher message de succès mais ne réenregistre pas
+            showFeedback("Plante déjà enregistrée pour cet utilisateur.", true);
+            return;
+          }
+
+          // Ajouter une entrée dans la collection 'captures'
+          await db.collection('captures').add({
+            userEmail,
+            plantId,
+            plantName,
+            codeEntered: code,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+          showFeedback("Plante enregistrée!", true);
+          input.value = "";
+
+        } catch (err) {
+          console.error("Erreur enregistrement capture:", err);
+          showFeedback("Erreur lors de l'enregistrement. Réessaie.", false);
+        }
+      } else {
+        showFeedback("Oups ce n'est pas la bonne plante!", false);
+      }
+    });
+
+    // Optionnel: valider aussi à l'appui sur Enter dans l'input
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { btn.click(); }
+    });
+
+    // Zoom image (même comportement que la page principale)
+    const img = document.getElementById('fauxpoivrier-img');
+    img.addEventListener('click', () => {
+      img.classList.toggle('enlarged');
+      document.body.classList.toggle('no-scroll');
+    });
+  </script>
+</body>
+</html>
