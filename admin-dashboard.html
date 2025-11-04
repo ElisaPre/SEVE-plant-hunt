@@ -10,6 +10,9 @@
       padding: 20px;
       background: #fff8f0;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     h2 {
@@ -33,16 +36,23 @@
       background: #e69500;
     }
 
+    .dashboard-container {
+      display: flex;
+      width: 100%;
+      margin-top: 20px;
+      gap: 20px;
+    }
+
+    /* Partie gauche : flux de captures */
+    #captures-feed {
+      flex: 2;
+      max-width: 700px;
+    }
+
     h3 {
-      margin-top: 30px;
       color: #b87333;
       border-bottom: 2px solid #ffb347;
       padding-bottom: 5px;
-    }
-
-    #captures-feed {
-      margin-top: 20px;
-      max-width: 800px;
     }
 
     .capture-item {
@@ -69,17 +79,59 @@
       color: #999;
       margin-top: 15px;
     }
+
+    /* Partie droite : classement */
+    #leaderboard {
+      flex: 1;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    #leaderboard h3 {
+      text-align: center;
+      color: #b87333;
+    }
+
+    .leader-item {
+      margin: 10px 0;
+      padding: 8px;
+      background: #fffaf2;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      line-height: 1.3;
+    }
+
+    .leader-item strong {
+      color: #b87333;
+    }
+
+    .rank {
+      font-weight: bold;
+      color: #ff8c00;
+    }
   </style>
 </head>
 
 <body>
   <h2>Admin Dashboard</h2>
-  <button id="btn-signout">Se déconnecter</button>
-  <button id="btn-return-participant">Retour participant</button>
+  <div>
+    <button id="btn-signout">Se déconnecter</button>
+    <button id="btn-return-participant">Retour participant</button>
+  </div>
 
-  <h3>Flux des captures (en temps réel)</h3>
-  <div id="captures-feed">
-    <p class="loading">Chargement des données en cours...</p>
+  <div class="dashboard-container">
+    <div id="captures-feed">
+      <h3>Flux des captures (en temps réel)</h3>
+      <p class="loading">Chargement des données...</p>
+    </div>
+
+    <div id="leaderboard">
+      <h3>Classement des participants</h3>
+      <p class="loading">Chargement du classement...</p>
+    </div>
   </div>
 
   <!-- Firebase -->
@@ -87,15 +139,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-  <!-- Ton fichier de config -->
+  <!-- Ton fichier config -->
   <script src="js/firebase-config.js"></script>
 
   <script>
     const btnSignout = document.getElementById('btn-signout');
     const btnReturnParticipant = document.getElementById('btn-return-participant');
     const feed = document.getElementById('captures-feed');
+    const leaderboard = document.getElementById('leaderboard');
 
-    // Déconnexion
     btnSignout.addEventListener('click', () => {
       auth.signOut().then(() => window.location.href = 'admin-login.html');
     });
@@ -104,7 +156,6 @@
       auth.signOut().then(() => window.location.href = 'index.html');
     });
 
-    // Vérifie que l'utilisateur est bien connecté et admin
     auth.onAuthStateChanged(user => {
       if (!user || user.email !== 'elisa.pregaldiny@gmail.com') {
         alert('Accès refusé');
@@ -114,7 +165,8 @@
       initRealtimeFeed();
     });
 
-    // Formate une date Firestore en HH:MM:SS
+    const db = firebase.firestore();
+
     function formatTime(ts) {
       if (!ts) return '';
       const d = ts.toDate ? ts.toDate() : new Date(ts);
@@ -124,22 +176,22 @@
       return `${hh}:${mm}:${ss}`;
     }
 
-    // Initialise le flux temps réel des captures
+    // --- 🔹 Flux des captures en temps réel ---
     function initRealtimeFeed() {
-      const db = firebase.firestore();
-
       db.collection('captures')
         .orderBy('timestamp', 'desc')
-        .limit(100)
         .onSnapshot(snapshot => {
-          feed.innerHTML = '';
+          const captures = [];
+          feed.innerHTML = '<h3>Flux des captures (en temps réel)</h3>';
+
           if (snapshot.empty) {
-            feed.innerHTML = '<p class="loading">Aucune capture pour le moment.</p>';
+            feed.innerHTML += '<p class="loading">Aucune capture pour le moment.</p>';
             return;
           }
 
           snapshot.forEach(doc => {
             const data = doc.data();
+            captures.push(data);
             const time = formatTime(data.timestamp);
             const div = document.createElement('div');
             div.className = 'capture-item';
@@ -149,10 +201,52 @@
             `;
             feed.appendChild(div);
           });
-        }, err => {
-          console.error("Erreur Firestore :", err);
-          feed.innerHTML = '<p class="loading" style="color:red;">Erreur de lecture des captures.</p>';
+
+          updateLeaderboard(captures);
         });
+    }
+
+    // --- 🔹 Classement des utilisateurs ---
+    function updateLeaderboard(captures) {
+      const leaderboardDiv = document.getElementById('leaderboard');
+      leaderboardDiv.innerHTML = '<h3>Classement des participants</h3>';
+
+      if (captures.length === 0) {
+        leaderboardDiv.innerHTML += '<p class="loading">Aucune capture enregistrée.</p>';
+        return;
+      }
+
+      // Regrouper par utilisateur
+      const counts = {};
+      captures.forEach(capture => {
+        const email = capture.userEmail;
+        if (!counts[email]) counts[email] = { count: 0, latestTime: null };
+        counts[email].count++;
+        const ts = capture.timestamp?.toDate ? capture.timestamp.toDate() : new Date(capture.timestamp);
+        if (!counts[email].latestTime || ts > counts[email].latestTime) {
+          counts[email].latestTime = ts;
+        }
+      });
+
+      // Convertir en tableau trié
+      const sorted = Object.entries(counts)
+        .map(([email, data]) => ({ email, ...data }))
+        .sort((a, b) => {
+          if (b.count !== a.count) return b.count - a.count;
+          return a.latestTime - b.latestTime; // le plus rapide d’abord
+        });
+
+      // Afficher le classement
+      sorted.forEach((user, index) => {
+        const div = document.createElement('div');
+        div.className = 'leader-item';
+        div.innerHTML = `
+          <div><strong>${user.email}</strong></div>
+          <div>Nombre de captures : ${user.count}</div>
+          <div>Classement : <span class="rank">#${index + 1}</span></div>
+        `;
+        leaderboardDiv.appendChild(div);
+      });
     }
   </script>
 </body>
