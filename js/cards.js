@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Plante 10", page: "plantes/Olivier.html", image: "Olivier.png" },
     { name: "Plante 11", page: "plantes/Pin parasol.html", image: "Pin parasol.png" },
     { name: "Plante 12", page: "plantes/Sumac de Virginie.html", image: "Sumac de Virginie.png" },
-    { name: "Plante 13", page: "plantes/plante5.html", image: "Vigne.png" },
+    { name: "Plante 13", page: "plantes/Vigne.html", image: "Vigne.png" },
     { name: "Plante 14", page: "plantes/plante5.html", image: "Yucca.png" }
   ];
 
