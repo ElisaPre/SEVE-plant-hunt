@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Plante 11", page: "plantes/Pin parasol.html", image: "Pin parasol.png" },
     { name: "Plante 12", page: "plantes/Sumac de Virginie.html", image: "Sumac de Virginie.png" },
     { name: "Plante 13", page: "plantes/Vigne.html", image: "Vigne.png" },
-    { name: "Plante 14", page: "plantes/plante5.html", image: "Yucca.png" }
+    { name: "Plante 14", page: "plantes/Yucca.html", image: "Yucca.png" }
   ];
 
   // Génération des cartes
