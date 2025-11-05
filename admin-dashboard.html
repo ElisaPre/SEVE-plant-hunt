@@ -143,6 +143,13 @@
     const feed = document.getElementById('captures-feed');
     const leaderboard = document.getElementById('leaderboard');
 
+    // ✅ Liste des administrateurs autorisés
+    const ADMIN_EMAILS = [
+      "elisa.pregaldiny@gmail.com",
+      "admin2@gmail.com",
+      "admin3@gmail.com"
+    ];
+
     // Déconnexion
     btnSignout.addEventListener('click', () => {
       auth.signOut().then(() => window.location.href = 'admin-login.html');
@@ -154,7 +161,7 @@
 
     // Vérifie que l'utilisateur est bien connecté et admin
     auth.onAuthStateChanged(user => {
-      if (!user || user.email !== 'elisa.pregaldiny@gmail.com') {
+      if (!user || !ADMIN_EMAILS.includes(user.email)) {
         alert('Accès refusé');
         window.location.href = 'admin-login.html';
         return;
