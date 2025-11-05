@@ -20,7 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Plante 13", page: "plantes/Vigne.html", image: "Vigne.png" },
     { name: "Plante 14", page: "plantes/Yucca.html", image: "Yucca.png" }
   ];
-
+  
+  // 🔀 Mélange l’ordre des cartes à chaque chargement
+  cards.sort(() => Math.random() - 0.5);
+  
   // Génération des cartes
   cards.forEach(cardData => {
     const card = document.createElement("div");
