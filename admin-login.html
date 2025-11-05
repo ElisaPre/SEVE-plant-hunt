@@ -126,16 +126,26 @@
 
   <script>
     const btnLogin = document.getElementById('btn-login');
+
+    // ✅ Liste des administrateurs autorisés
+    const ADMIN_EMAILS = [
+      "elisa.pregaldiny@gmail.com",
+      "luciehuguesperez02@gmail.com",
+      "ryma.lamari@etu.umontpellier.fr",
+      "maeva.hl.psqt@gmail.com",
+      "clara.cordel@etu.umontpellier.fr"
+    ];
+
     btnLogin.addEventListener('click', () => {
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
 
-      // Connecte l'admin
+      // Connexion admin
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Vérifie que c'est bien l'email admin
-          if (email === "elisa.pregaldiny@gmail.com") {
-            window.location.href = "admin-dashboard.html"; // Redirection vers dashboard
+          // Vérifie que l'email est bien autorisé
+          if (ADMIN_EMAILS.includes(email)) {
+            window.location.href = "admin-dashboard.html";
           } else {
             alert("Accès refusé : vous n'êtes pas admin.");
             auth.signOut();
